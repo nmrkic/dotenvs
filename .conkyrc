@@ -1,0 +1,129 @@
+conky.config = {
+	background = false,
+
+	use_xft = true,
+	font = 'Sans:size=8',
+	xftalpha = 1,
+	update_interval = 1.0,
+	total_run_times = 0,
+	double_buffer = true,
+	minimum_width = 100, minimum_height = 100,
+	maximum_width = 200,
+	text_buffer_size = 1024,
+
+	draw_shades = true,
+	draw_outline = false,
+	draw_borders = false,
+	draw_graph_borders = true,
+	default_color = 'white',
+	default_shade_color = 'black',
+	default_outline_color = 'white',
+	-- alignment top_left
+	alignment = 'top_right',
+	-- alignment bottom_left
+	-- alignment bottom_right
+	-- gap_x -1920
+	gap_y = 10,
+	no_buffers = true,
+	uppercase = false,
+	cpu_avg_samples = 2,
+	override_utf8_locale = true,
+	own_window_argb_value = 255,
+
+	own_window = true,
+	own_window_transparent = true,
+	own_window_class = 'Conky',
+	own_window_type = 'override',
+	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+	own_window_argb_visual = true,
+	own_window_argb_value = 0,
+	-- own_window_type normal
+	-- own_window_type desktop
+	-- own_window_colour LightSkyBlue
+
+
+	default_color = '#3385ff',
+	color1 = '#3385ff',
+	color2 = '#66a3ff',
+	color3 = '#888888',
+	color4 = '#00EE00',
+	color5 = '#EF5A29',
+	color6 = '#5abdf6',
+
+
+};
+
+conky.text = [[
+
+# Time & Date ${hr 2}
+${color2}${font Arial Black:size=18}${alignc}${time %H:%M}${font}
+${alignc}${time %A, %B %d, %Y}
+${color2}${alignc}${execi 300 /home/nebojsa/.conky/weather.sh NOVISAD} °C${font}
+
+${color1}${font sans-serif:bold:size=8}SYSTEM ${hr 2}
+${color2}${font sans-serif:normal:size=8}$sysname $kernel $alignr $machine
+# Host:$alignr$nodename
+Uptime:$alignr$uptime
+Chicago Time: $alignr${tztime UTC+5 %H:%M}${font}
+
+${color1}${font sans-serif:bold:size=8}PROCESSORS ${hr 2}
+${color1}CPU Core 0 temp: ${execi 30 sensors | grep 'Core 0' | awk '{print $3 + 0.00}'}°C
+${color2}${font sans-serif:normal:size=8}${cpugraph cpu1 14}
+${color1}CPU1: ${cpu cpu1}% ${cpubar cpu1}
+${color2}${font sans-serif:normal:size=8}${cpugraph cpu2 14}
+${color1}CPU2: ${cpu cpu2}% ${cpubar cpu2}
+${font sans-serif:bold:size=8}
+${color1}CPU Core 1 temp: ${execi 30 sensors | grep 'Core 1' | awk '{print $3 + 0.00}'}°C
+${color2}${font sans-serif:normal:size=8}${cpugraph cpu3 14}
+${color1}CPU3: ${cpu cpu3}% ${cpubar cpu3}
+${color2}${font sans-serif:normal:size=8}${cpugraph cpu4 14}
+${color1}CPU4: ${cpu cpu4}% ${cpubar cpu4}
+
+${font sans-serif:bold:size=8}TOP MEMORY PROCESSES ${hr 2}
+Name${alignr}PID            ${alignr}MB
+${color2}${font sans-serif:normal:size=8}${top_mem name 1}${alignr}${top_mem pid 1}${alignr}      ${top_mem mem_res 1}
+${top_mem name 2}${alignr}${top_mem pid 2}${alignr}      ${top_mem mem_res 2}
+$font${top_mem name 3}${alignr}${top_mem pid 3}      ${alignr}${top_mem mem_res 3}
+# $font${top_mem name 4}${alignr}${top_mem pid 4}      ${alignr}${top_mem mem_res 4}
+# $font${top_mem name 5}${alignr}${top_mem pid 5}      ${alignr}${top_mem mem_res 5}
+
+${color1}${font sans-serif:bold:size=8}TOP PROCESSES ${hr 2}
+Name${alignr}PID            ${alignr}%
+${color2}${font sans-serif:normal:size=8}${top name 1}${alignr}${top pid 1}${alignr}      ${top cpu 1}
+${top name 2}${alignr}${top pid 2}${alignr}      ${top cpu 2}
+$font${top name 3}${alignr}${top pid 3}      ${alignr}${top cpu 3}
+# $font${top name 4}${alignr}${top pid 4}      ${alignr}${top cpu 4}
+# $font${top name 5}${alignr}${top pid 5}      ${alignr}${top cpu 5}
+
+
+${color1}${font sans-serif:bold:size=8}MEMORY ${hr 2}
+${color2}${font sans-serif:normal:size=8}RAM $alignc $mem / $memmax $alignr $memperc%
+$membar
+SWAP $alignc ${swap} / ${swapmax} $alignr ${swapperc}%
+${swapbar}
+
+${color1}${font sans-serif:bold:size=8}DISKS ${hr 2}
+${color2}${font sans-serif:normal:size=8}/ $alignc ${fs_used /} / ${fs_size /} $alignr ${fs_used_perc /}%
+${fs_bar /}
+# ${font sans-serif:normal:size=8}/home $alignc ${fs_used /home} / ${fs_size /home} $alignr ${fs_used_perc /home}%
+# ${fs_bar /home}
+
+${color1}${font sans-serif:bold:size=8}NETWORK ${hr 2}${color2}${if_existing /proc/net/route eno1}
+${font sans-serif:normal:size=8}IP address: $alignr ${addr eno1}
+${downspeedgraph eno1 14}
+DLS:${downspeed eno1} kb/s $alignr total: ${totaldown eno1}
+${upspeedgraph eno1 14}
+ULS:${upspeed eno1} kb/s $alignr total: ${totalup eno1}
+${endif}${if_existing /proc/net/route wlp2s0}
+${font sans-serif:normal:size=8}IP address: $alignr ${addr wlp2s0}
+ESSID: $alignr ${wireless_essid wlp2s0}
+Connection quality: $alignr ${wireless_link_qual_perc wlp2s0}%
+${downspeedgraph wlp2s0 14}
+DLS:${downspeed wlp2s0} kb/s $alignr total: ${totaldown wlp2s0}
+${upspeedgraph wlp2s0 14}
+ULS:${upspeed wlp2s0} kb/s $alignr total: ${totalup wlp2s0}
+${endif}
+
+${color1}${font sans-serif:bold:size=8}BATTERY ${hr 2}
+${color2}BTHead: $alignr ${execi 60 /home/nebojsa/tools/battery_level/battery_level.py F4:BC:DA:00:BF:63 1}
+]];

@@ -1,0 +1,83 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "pixel",
+    "current_border_width": 2,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 506,
+       "width": 802,
+       "x": 0,
+       "y": 0
+    },
+    "marks": [],
+    "name": "Terminal",
+    "percent": 0.5,
+    "swallows": [
+       {
+        "class": "^Gnome\\-terminal$",
+        "instance": "^gnome\\-terminal\\-server$",
+        "title": "^Terminal$",
+        "window_role": "^gnome\\-terminal\\-window\\-40f02c5e\\-eb2e\\-453e\\-ab38\\-72626199c38b$"
+       }
+    ],
+    "type": "con"
+}
+
+{
+    // splitv split container with 2 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "layout": "splitv",
+    "marks": [],
+    "percent": 0.5,
+    "type": "con",
+    "nodes": [
+        {
+            "border": "pixel",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 506,
+               "width": 802,
+               "x": 0,
+               "y": 0
+            },
+            "marks": [],
+            "name": "Terminal",
+            "percent": 0.5,
+            "swallows": [
+               {
+                "class": "^Gnome\\-terminal$",
+                "instance": "^gnome\\-terminal\\-server$",
+                "title": "^Terminal$",
+                "window_role": "^gnome\\-terminal\\-window\\-0af5823d\\-cd4e\\-4a59\\-814f\\-b561e68e1388$"
+               }
+            ],
+            "type": "con"
+        },
+        {
+            "border": "pixel",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 506,
+               "width": 802,
+               "x": 0,
+               "y": 0
+            },
+            "marks": [],
+            "name": "Terminal",
+            "percent": 0.5,
+            "swallows": [
+               {
+                "class": "^Gnome\\-terminal$",
+                "instance": "^gnome\\-terminal\\-server$",
+                "title": "^Terminal$",
+                "window_role": "^gnome\\-terminal\\-window\\-87b569ec\\-31df\\-401a\\-91d9\\-ff83e7f3550c$"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
