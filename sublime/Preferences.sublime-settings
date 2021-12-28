@@ -1,0 +1,84 @@
+{
+	"added_words":
+	[
+		"Activ",
+		"Onboarding",
+		"Gitlab",
+		"Rebase",
+		"linting",
+		"Flake8",
+		"walkthrough",
+		"Udemy",
+		"virtualenv",
+		"Django",
+		"Backend",
+		"Frontend",
+		"Backends",
+		"vue",
+		"js",
+		"Senic",
+		"Kubernetes",
+		"python3",
+		"mkvirtualenv",
+		"env",
+		"txt",
+		"postgres",
+		"redis",
+		"createsuperuser",
+		"runserver",
+		"py"
+	],
+	"anaconda_linting": false,
+	"auto_complete": true,
+	"auto_complete_commit_on_tab": true,
+	"auto_complete_selector": "source - comment",
+	"auto_complete_triggers":
+	[
+		{
+			"characters": ".",
+			"selector": "source.python - string - comment - constant.numeric",
+		},
+		{
+			"characters": ".",
+			"selector": "user.py",
+		}
+	],
+	"auto_complete_with_fields": false,
+	"color_scheme": "Packages/Theme - Midnight/Midnight.dark.tmTheme",
+	"draw_white_space": "all",
+	"ensure_newline_at_eof_on_save": true,
+	"font_size": 15,
+	"ignored_packages":
+	[
+		"Markdown",
+	],
+	"ignored_words":
+	[
+		"Collab",
+		"collab",
+		"dev",
+		"hotfix",
+		"https",
+		"mrkic",
+		"nebojsa",
+		"nosolutions",
+		"onboarding",
+		"param",
+		"somestring",
+		"svg"
+	],
+	"index_exclude_patterns":
+	[
+	],
+	"pep8": false,
+	"sublimelinter": true,
+	"tab_size": 4,
+	"theme": "Midnight-dark.sublime-theme",
+	"translate_tabs_to_spaces": true,
+	"trim_trailing_white_space_on_save": true,
+	"vintage_ctrl_keys": true,
+	"vintage_start_in_command_mode": true,
+	"vintage_use_clipboard": true,
+	"word_wrap": false,
+	"show_errors_on_save": true,
+}

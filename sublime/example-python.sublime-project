@@ -1,0 +1,32 @@
+{
+    "@python": 3.8,
+    "build_systems":
+    [
+        {
+            "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+            "name": "Anaconda Python Builder",
+            "selector": "source.python",
+            "shell_cmd": "\"/home/nebojsa/projects/.virtualenvs/change/bin/python\" -u \"$file\"",
+        }
+    ],
+    "folders":
+    [
+        {
+            "follow_symlinks": true,
+            "path": "/home/nebojsa/projects/change/",
+            "file_exclude_patterns": ["*.sublime-project","*.sublime-gulp.cache"],
+            "folder_exclude_patterns": [".eggs",".pytest_cache","__pycache__", "dist", "build"],
+        }
+    ],
+    "settings":
+    {
+        "anaconda_debug": true,
+        "extra_paths":
+        [
+            "/home/nebojsa/projects/.virtualenvs/change/lib/python3.8/site-packages/"
+        ],
+        "python_interpreter": "/home/nebojsa/projects/.virtualenvs/change/bin/python",
+        "suppress_word_completions": false,
+    },
+    "virtualenv": "/home/nebojsa/projects/.virtualenvs/change/",
+}

@@ -1,0 +1,29 @@
+Anaconda
+Compare Side-By-Side
+Drakula Color Scheme
+Djeneiro
+Dockerfile Syntax Highlighting
+ESLint
+Git
+GitGutter
+Golang
+Golang Build
+HTML-CSS-JS-Prettify
+LSP
+MarkdownEditing
+MarkdownLivePreview
+MOnokai-Spacegrey
+Pretty YAML
+Python 3
+React IDE
+ShellScirptimproved
+SideBarTools
+SublimeLinter
+SublimeLinter-contrib-markdownlint
+SublimeLinter-flake8
+SublimeLinter-golint
+Terminal
+Theme-Glacier
+Theme-Vidnight
+TypeScript
+Vue Syntax Highlight
