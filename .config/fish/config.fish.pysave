@@ -1,7 +1,15 @@
 test $TERM != "screen"; and exec tmux
-set -x VIRTUALFISH_HOME /Users/nmrkic/projects/.virtualenvs
-fish_add_path /opt/homebrew/bin
-fish_add_path /opt/homebrew/opt/mysql-client/bin
+set -x VIRTUALFISH_HOME /home/nebojsa/projects/.virtualenvs
+set -x GOPATH /home/nebojsa/projects/.go
+set -x GOROOT /usr/lib/go
+set -x GOBIN /home/nebojsa/projects/.go/bin
+#set -x GOPATH /home/nebojsa/tools/golang_courses/workspace
+set PATH $PATH ~/.local/bin
+set PATH $PATH $GOPATH/bin
+# set PATH $PATH ~/tools/android/tools
+# set PATH $PATH ~/tools/android/tools/bin
+# set ANDROID_SDK_ROOT ~/tools/android/ 
+set PATH $PATH:/opt/homebrew/bin
 
 # eval (python -m virtualfish compat_aliases)
 
@@ -51,7 +59,3 @@ alias d-u 'docker-compose up -d'
 # -------------------------------------------------------------------
 alias kc 'kubectl'
 alias kx 'kubectx'
-
-# Setting PATH for Python 3.10
-# The original version is saved in /Users/nmrkic/.config/fish/config.fish.pysave
-set -x PATH "/Library/Frameworks/Python.framework/Versions/3.10/bin" "$PATH"
