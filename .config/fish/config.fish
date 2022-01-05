@@ -52,6 +52,17 @@ alias d-u 'docker-compose up -d'
 alias kc 'kubectl'
 alias kx 'kubectx'
 
+# -------------------------------------------------------------------
+# Survey Monkey docker image aliases
+# -------------------------------------------------------------------
+function pullimages
+    APP_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-jobs:branch-"$argv" docker-compose pull
+end
+
+function startimages
+    APP_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-jobs:branch-"$argv" docker-compose up -d
+end
+
 # Setting PATH for Python 3.10
 # The original version is saved in /Users/nmrkic/.config/fish/config.fish.pysave
 set -x PATH "/Library/Frameworks/Python.framework/Versions/3.10/bin" "$PATH"
