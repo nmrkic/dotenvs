@@ -63,6 +63,13 @@ function startimages
     APP_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-jobs:branch-"$argv" docker-compose up -d
 end
 
+function move_left
+    yabai -m window --display west; yabai -m display --focus west;ayabai -m window -swap east
+end
+
+function move_right
+    yabai -m window --display east; yabai -m display --focus east; yabai -m window --swap west
+end
 # Setting PATH for Python 3.10
 # The original version is saved in /Users/nmrkic/.config/fish/config.fish.pysave
 set -x PATH "/Library/Frameworks/Python.framework/Versions/3.10/bin" "$PATH"

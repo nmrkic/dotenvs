@@ -81,4 +81,5 @@
 	"vintage_use_clipboard": true,
 	"word_wrap": false,
 	"show_errors_on_save": true,
+	"find_selected_text": true,
 }
