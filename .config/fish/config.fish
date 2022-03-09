@@ -3,6 +3,10 @@ set -x VIRTUALFISH_HOME /Users/nmrkic/projects/.virtualenvs
 fish_add_path /opt/homebrew/bin
 fish_add_path /opt/homebrew/opt/mysql-client/bin
 
+set -x LANG en_US.UTF-8
+set -x LC_CTYPE UTF-8
+set -x PATH $PATH:/Users/nmrkic/tools/maven/bin
+
 # eval (python -m virtualfish compat_aliases)
 
 
