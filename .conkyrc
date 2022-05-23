@@ -7,7 +7,8 @@ conky.config = {
 	update_interval = 1.0,
 	total_run_times = 0,
 	double_buffer = true,
-	minimum_width = 100, minimum_height = 100,
+	minimum_width = 100,
+        minimum_height = 100,
 	maximum_width = 200,
 	text_buffer_size = 1024,
 
@@ -18,11 +19,12 @@ conky.config = {
 	default_color = 'white',
 	default_shade_color = 'black',
 	default_outline_color = 'white',
-	-- alignment top_left
 	alignment = 'top_right',
+	-- alignment top_left
 	-- alignment bottom_left
 	-- alignment bottom_right
-	-- gap_x -1920
+	-- gap_x = -1910,
+	gap_x = 10,
 	gap_y = 10,
 	no_buffers = true,
 	uppercase = false,
@@ -30,7 +32,7 @@ conky.config = {
 	override_utf8_locale = true,
 	own_window_argb_value = 255,
 
-	own_window = true,
+	own_window = false,
 	own_window_transparent = true,
 	own_window_class = 'Conky',
 	own_window_type = 'override',
@@ -40,7 +42,6 @@ conky.config = {
 	-- own_window_type normal
 	-- own_window_type desktop
 	-- own_window_colour LightSkyBlue
-
 
 	default_color = '#3385ff',
 	color1 = '#3385ff',
@@ -65,6 +66,7 @@ ${color2}${font sans-serif:normal:size=8}$sysname $kernel $alignr $machine
 # Host:$alignr$nodename
 Uptime:$alignr$uptime
 Chicago Time: $alignr${tztime UTC+5 %H:%M}${font}
+Battery: ${battery_percent BAT0}% ${alignr}${battery_bar 5,50 BAT0} 
 
 ${color1}${font sans-serif:bold:size=8}PROCESSORS ${hr 2}
 ${color1}CPU Core 0 temp: ${execi 30 sensors | grep 'Core 0' | awk '{print $3 + 0.00}'}°C
@@ -80,7 +82,7 @@ ${color2}${font sans-serif:normal:size=8}${cpugraph cpu4 14}
 ${color1}CPU4: ${cpu cpu4}% ${cpubar cpu4}
 
 ${font sans-serif:bold:size=8}TOP MEMORY PROCESSES ${hr 2}
-Name${alignr}PID            ${alignr}MB
+Name${alignr}PID           ${alignr}MB
 ${color2}${font sans-serif:normal:size=8}${top_mem name 1}${alignr}${top_mem pid 1}${alignr}      ${top_mem mem_res 1}
 ${top_mem name 2}${alignr}${top_mem pid 2}${alignr}      ${top_mem mem_res 2}
 $font${top_mem name 3}${alignr}${top_mem pid 3}      ${alignr}${top_mem mem_res 3}
@@ -88,7 +90,7 @@ $font${top_mem name 3}${alignr}${top_mem pid 3}      ${alignr}${top_mem mem_res 
 # $font${top_mem name 5}${alignr}${top_mem pid 5}      ${alignr}${top_mem mem_res 5}
 
 ${color1}${font sans-serif:bold:size=8}TOP PROCESSES ${hr 2}
-Name${alignr}PID            ${alignr}%
+Name${alignr}PID        ${alignr} %
 ${color2}${font sans-serif:normal:size=8}${top name 1}${alignr}${top pid 1}${alignr}      ${top cpu 1}
 ${top name 2}${alignr}${top pid 2}${alignr}      ${top cpu 2}
 $font${top name 3}${alignr}${top pid 3}      ${alignr}${top cpu 3}
