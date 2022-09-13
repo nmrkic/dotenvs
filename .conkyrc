@@ -82,20 +82,20 @@ ${color2}${font sans-serif:normal:size=8}${cpugraph cpu4 14}
 ${color1}CPU4: ${cpu cpu4}% ${cpubar cpu4}
 
 ${font sans-serif:bold:size=8}TOP MEMORY PROCESSES ${hr 2}
-Name${alignr}PID           ${alignr}MB
-${color2}${font sans-serif:normal:size=8}${top_mem name 1}${alignr}${top_mem pid 1}${alignr}      ${top_mem mem_res 1}
+Name${alignr}PID         ${alignr}MB ${color2}${font sans-serif:normal:size=8}
+${top_mem name 1}${alignr}${top_mem pid 1}${alignr}      ${top_mem mem_res 1}
 ${top_mem name 2}${alignr}${top_mem pid 2}${alignr}      ${top_mem mem_res 2}
-$font${top_mem name 3}${alignr}${top_mem pid 3}      ${alignr}${top_mem mem_res 3}
-# $font${top_mem name 4}${alignr}${top_mem pid 4}      ${alignr}${top_mem mem_res 4}
-# $font${top_mem name 5}${alignr}${top_mem pid 5}      ${alignr}${top_mem mem_res 5}
+${top_mem name 3}${alignr}${top_mem pid 3}${alignr}      ${top_mem mem_res 3}
+# ${top_mem name 4}${alignr}${top_mem pid 4}      ${alignr}${top_mem mem_res 4}
+# ${top_mem name 5}${alignr}${top_mem pid 5}      ${alignr}${top_mem mem_res 5}
 
 ${color1}${font sans-serif:bold:size=8}TOP PROCESSES ${hr 2}
-Name${alignr}PID        ${alignr} %
-${color2}${font sans-serif:normal:size=8}${top name 1}${alignr}${top pid 1}${alignr}      ${top cpu 1}
-${top name 2}${alignr}${top pid 2}${alignr}      ${top cpu 2}
-$font${top name 3}${alignr}${top pid 3}      ${alignr}${top cpu 3}
-# $font${top name 4}${alignr}${top pid 4}      ${alignr}${top cpu 4}
-# $font${top name 5}${alignr}${top pid 5}      ${alignr}${top cpu 5}
+Name${alignr}PID       ${alignr} % ${color2}${font sans-serif:normal:size=8}
+${top name 1} ${alignr}${top pid 1}${alignr}      ${top cpu 1}
+${top name 2} ${alignr}${top pid 2}${alignr}      ${top cpu 2}
+${top name 3} ${alignr}${top pid 3}${alignr}      ${top cpu 3}
+# ${top name 4}${alignr}${top pid 4}      ${alignr}${top cpu 4}
+# ${top name 5}${alignr}${top pid 5}      ${alignr}${top cpu 5}
 
 
 ${color1}${font sans-serif:bold:size=8}MEMORY ${hr 2}

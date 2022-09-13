@@ -7,7 +7,3 @@ filetype indent plugin on
 :  autocmd BufLeave,FocusLost,InsertEnter   * set nonu norelativenumber
 :augroup END
 set clipboard+=unnamed
-call plug#begin('~/.vim/plugged')
-Plug 'fagih/vim-go', { 'do': ':GoUpdateBinaries' } 
-call plug#end()
-
