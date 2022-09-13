@@ -1,0 +1,42 @@
+// SublimeLinter Settings - User
+{
+    "lint_mode": "background",
+    "no_column_highlights_line": false,
+    "linters": {
+        "flake8": {
+            "args": ["--max-line-length=180"]
+        },
+        "pyflakes": {
+            "disable": true
+        },
+        "markdownlint": {
+            "args": ["--config", "~/.markdownlint/config.json"]
+        },
+        "eslint": {
+            "selector": "source.ts, source.tsx, source.js, source.jsx - meta.attribute-with-value"
+            // "args": ["--max-line-length=180"]
+        }
+    },
+    "styles": [
+        {
+            "mark_style": "outline",
+            "priority": 1,
+            "scope": "region.yellowish markup.changed.sublime_linter markup.warning.sublime_linter",
+            "icon": "dot",
+            "types": [
+                "warning"
+            ]
+        },
+        {
+            "mark_style": "outline",
+            "priority": 1,
+            "scope": "region.redish markup.deleted.sublime_linter markup.error.sublime_linter",
+            "icon": "dot",
+            "types": [
+                "error"
+            ]
+        }
+    ],
+
+    "show_panel_on_save": "view",
+}
