@@ -6,7 +6,10 @@
 	{ "keys": ["ctrl+forward_slash"], "command": "toggle_comment", "args": { "block": false } },
 	{ "keys": ["ctrl+shift+r"], "command": "reveal_in_side_bar"},
 	{ "keys": ["u"], "command": "undo", "context": [{"key": "settings.command_mode"}]},
-	{ "keys": ["ctrl+r"], "command": "redo", "context": [{"key": "settings.command_mode"}]}
+	{ "keys": ["u"], "command": "noop", "context": [{"key": "settings.visual_mode"}]},
+	{ "keys": ["u"], "command": "show_panel", "args": {"panel": "find_in_files"}, "context": [{"key": "settings.visual_mode"}] },
+	// { "keys": ["u"], "command": "undo", "context": [{"key": "settings.visual_mode"}]},
+	{ "keys": ["ctrl+r"], "command": "redo", "context": [{"key": "settings.command_mode"}]},
 	// { "keys": ["ctrl+k", "ctrl+b"], "command": "toggle_side_bar"},
 	// { "keys": ["ctrl+k+l"], "command": "sublime_linter_lint" },
 	// { "keys": ["ctrl+k+a"], "command": "sublime_linter_panel_toggle" },
@@ -16,4 +19,5 @@
 	// { "keys": ["ctrl+k+p"], "command": "sublime_linter_goto_error",
 	//   "args": { "direction": "previous" }
 	// }
+	{ "keys": ["ctrl+w"], "command": "toggle_settings", "args": {"settings": "word_wrap"}}
 ]

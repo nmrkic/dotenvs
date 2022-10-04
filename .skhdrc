@@ -113,3 +113,4 @@ alt + shift - f : yabai -m window --toggle native-fullscreen
 alt - return : open -n /Applications/iTerm.app
 alt + shift - return : open -a "Google Chrome" -n
 alt + shift - s : open -a "Sublime Text" -n
+alt + shift - o : open -a "Microsoft Outlook.app" -n

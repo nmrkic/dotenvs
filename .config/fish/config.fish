@@ -1,14 +1,16 @@
-test $TERM != "screen"; and exec tmux
+# test $TERM != "screen"; and exec tmux
+# exec tmux
 set -x VIRTUALFISH_HOME /Users/nmrkic/projects/.virtualenvs
 fish_add_path /opt/homebrew/bin
 fish_add_path /opt/homebrew/opt/mysql-client/bin
+fish_add_path /opt/local/lib
 
 set -x LANG en_US.UTF-8
 set -x LC_CTYPE UTF-8
-set -x PATH $PATH:/Users/nmrkic/tools/maven/bin
-
+set -x PATH /Users/nmrkic/.pyenv/shims /Library/Frameworks/Python.framework/Versions/3.10/bin $PATH /Users/nmrkic/tools/maven/bin
+nvm use
 # eval (python -m virtualfish compat_aliases)
-
+set -x PYTHONBREAKPOINT "pudb.set_trace"
 
 # -------------------------------------------------------------------
 # directory information
@@ -74,6 +76,4 @@ end
 function move_right
     yabai -m window --display east; yabai -m display --focus east; yabai -m window --swap west
 end
-# Setting PATH for Python 3.10
-# The original version is saved in /Users/nmrkic/.config/fish/config.fish.pysave
-set -x PATH "/Library/Frameworks/Python.framework/Versions/3.10/bin" "$PATH"
+

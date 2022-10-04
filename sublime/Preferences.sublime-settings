@@ -76,6 +76,7 @@
 	"theme": "Midnight-dark.sublime-theme",
 	"translate_tabs_to_spaces": false,
 	"trim_trailing_white_space_on_save": true,
+	"trim_only_modified_white_space": false,
 	"vintage_ctrl_keys": true,
 	"vintage_start_in_command_mode": true,
 	"vintage_use_clipboard": true,

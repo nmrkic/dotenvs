@@ -56,6 +56,7 @@ yabai -m rule --add app="Calculator" title="^$"  manage=off
 ## float settings windows
 yabai -m rule --add title='Settings$' manage=off
 yabai -m rule --add app="^Activity Monitor" manage=off
+yabai -m rule --add app="^Calendar" manage=off
 #
 ## Some Goland settings, in case you are using it. float Goland Preference panes
 # yabai -m rule --add app='Goland IDEA' title='^$' manage=off
