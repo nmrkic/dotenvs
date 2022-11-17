@@ -127,5 +127,5 @@ ULS:${upspeed wlp2s0} kb/s $alignr total: ${totalup wlp2s0}
 ${endif}
 
 ${color1}${font sans-serif:bold:size=8}BATTERY ${hr 2}
-${color2}BTHead: $alignr ${execi 60 /home/nebojsa/tools/dotenvs/battery_level/battery_level.py F4:BC:DA:00:BF:63 1}
+${color2}BTHead: $alignr ${execi 60 /home/nebojsa/tools/dotenvs/battery_level/battery_level.py 74:B7:E6:03:73:42 1}
 ]];

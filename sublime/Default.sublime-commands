@@ -1,0 +1,10 @@
+[
+    {
+        "caption": ":q - Close",
+        "command": "close"
+    },
+    {
+        "caption": ":x - Save and Close",
+        "command": "save_and_close"
+    }
+]
