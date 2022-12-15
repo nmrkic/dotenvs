@@ -8,7 +8,7 @@ fish_add_path /opt/local/lib
 set -x LANG en_US.UTF-8
 set -x LC_CTYPE UTF-8
 set -x PATH /Users/nmrkic/.pyenv/shims /Library/Frameworks/Python.framework/Versions/3.10/bin $PATH /Users/nmrkic/tools/maven/bin
-nvm use
+# nvm use
 # eval (python -m virtualfish compat_aliases)
 set -x PYTHONBREAKPOINT "pudb.set_trace"
 
