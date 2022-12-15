@@ -1,0 +1,25 @@
+[user]
+	email = mrkic.nebojsa@gmail.com
+	name = Nebojsa Mrkic
+	signingkey = 08A75728ED96AC6E266769717189CC4DC1277D9C
+[pull]
+	rese = false
+	rebase = false
+[core]
+	editor = vim
+	sshCommand = ssh
+	pager = delta
+[commit]
+	gpgsign = false
+[init]
+	defaultBranch = main
+[interactive]
+	difffilter = delta --color-only
+[delta]
+	navigate = true
+	light = false
+[diff]
+	colormoved = default
+
+[merge]
+	conflictstyle = diff3
