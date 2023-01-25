@@ -10,15 +10,17 @@
 import subprocess
 import socket
 import sys
+import base64
 
 
 def send(sock, message):
-    # print('>' + message.decode())
+    print(message)
     sock.send(b"\r\n" + message + b"\r\n")
 
 
 def getATCommand(sock, line):
-    # print('<' + line.decode())
+    # print(base64.b64encode(line))
+    # print(base64.b64encode(line).decode('utf-8'))
     if b"BRSF" in line:
         send(sock, b"+BRSF:20")
         send(sock, b"OK")
@@ -73,7 +75,8 @@ def main():
     try:
         s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
         s.connect((BT_ADDRESS, int(sys.argv[2])))
-    except Exception:
+    except Exception as e:
+        print(str(e))
         print("No bat lvl!")
         exit()
 
