@@ -47,7 +47,7 @@
 	"color_scheme": "Packages/Theme - Midnight/Midnight.dark.tmTheme",
 	"draw_white_space": "all",
 	"ensure_newline_at_eof_on_save": true,
-	"font_size": 15,
+	"font_size": 16,
 	"ignored_packages":
 	[
 		"Markdown",
@@ -83,4 +83,5 @@
 	"word_wrap": false,
 	"show_errors_on_save": true,
 	"find_selected_text": true,
+	"close_windows_when_empty": true,
 }

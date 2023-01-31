@@ -62,11 +62,11 @@ alias kx 'kubectx'
 # Survey Monkey docker image aliases
 # -------------------------------------------------------------------
 function pullimages
-    APP_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-jobs:branch-"$argv" docker-compose pull
+    APP_IMAGE=docker.corp.surveymonkey.com/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.corp.surveymonkey.com/smapply/smapply-app:branch-"$argv" docker-compose pull --no-parallel
 end
 
 function startimages
-    APP_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.t1.smapply.test:5000/smapply/smapply-jobs:branch-"$argv" docker-compose up -d
+    APP_IMAGE=docker.corp.surveymonkey.com/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.corp.surveymonkey.com/smapply/smapply-app:branch-"$argv" docker-compose up -d
 end
 
 function move_left
