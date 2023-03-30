@@ -1,5 +1,3 @@
-# test $TERM != "screen"; and exec tmux
-# exec tmux
 set -x VIRTUALFISH_HOME /Users/nmrkic/projects/.virtualenvs
 fish_add_path /opt/homebrew/bin
 fish_add_path /opt/homebrew/opt/mysql-client/bin
@@ -49,7 +47,7 @@ alias gmt 'git mergetool'
 # -------------------------------------------------------------------
 # Docker
 # -------------------------------------------------------------------
-alias d-c 'docker-compose'
+alias d-c 'docker-compose -f docker/prod/docker-compose.yml'
 alias d-s 'docker stop (docker ps -q)'
 alias d-u 'docker-compose up -d'
 # -------------------------------------------------------------------
