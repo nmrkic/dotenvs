@@ -1,7 +1,7 @@
 [user]
 	email = mrkic.nebojsa@gmail.com
 	name = Nebojsa Mrkic
-	signingkey = 08A75728ED96AC6E266769717189CC4DC1277D9C
+	signingkey = 7B575A703D16883497F025788F598A925033BBBD
 [pull]
 	rese = false
 	rebase = false
