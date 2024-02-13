@@ -50,9 +50,10 @@ alias gmt 'git mergetool'
 # -------------------------------------------------------------------
 # Docker
 # -------------------------------------------------------------------
-alias d-c 'docker-compose'
+alias docker-compose 'docker compose'
+alias d-c 'docker compose'
 alias d-s 'docker stop (docker ps -q)'
-alias d-u 'docker-compose up -d'
+alias d-u 'docker compose up -d'
 # -------------------------------------------------------------------
 # K8s
 # -------------------------------------------------------------------
