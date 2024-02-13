@@ -1,10 +1,14 @@
 [
     {
-        "caption": ":q - Close",
+        "caption": ":x - Save and Close",
+        "command": "save_and_close"
+    },
+    {
+        "caption": ":x - Close",
         "command": "close"
     },
     {
-        "caption": ":x - Save and Close",
-        "command": "save_and_close"
+        "caption": ":q - Close",
+        "command": "close"
     }
 ]
