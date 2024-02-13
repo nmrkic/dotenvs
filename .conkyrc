@@ -6,7 +6,7 @@ conky.config = {
 	xftalpha = 1,
 	update_interval = 1.0,
 	total_run_times = 0,
-	double_buffer = true,
+	double_buffer = false,
 	minimum_width = 100,
         minimum_height = 100,
 	maximum_width = 200,
@@ -20,7 +20,7 @@ conky.config = {
 	default_shade_color = 'black',
 	default_outline_color = 'white',
 	alignment = 'top_right',
-	-- alignment top_left
+	-- alignment = 'top_left',
 	-- alignment bottom_left
 	-- alignment bottom_right
 	-- gap_x = -1910,
@@ -30,10 +30,9 @@ conky.config = {
 	uppercase = false,
 	cpu_avg_samples = 2,
 	override_utf8_locale = true,
-	own_window_argb_value = 255,
 
-	own_window = false,
-	own_window_transparent = true,
+	own_window = true,
+	own_window_transparent = false,
 	own_window_class = 'Conky',
 	own_window_type = 'override',
 	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
@@ -75,7 +74,7 @@ ${color1}CPU1: ${cpu cpu1}% ${cpubar cpu1}
 ${color2}${font sans-serif:normal:size=8}${cpugraph cpu2 14}
 ${color1}CPU2: ${cpu cpu2}% ${cpubar cpu2}
 ${font sans-serif:bold:size=8}
-${color1}CPU Core 1 temp: ${execi 30 sensors | grep 'Core 1' | awk '{print $3 + 0.00}'}°C
+${color1}CPU Core 4 temp: ${execi 30 sensors | grep 'Core 4' | awk '{print $3 + 0.00}'}°C
 ${color2}${font sans-serif:normal:size=8}${cpugraph cpu3 14}
 ${color1}CPU3: ${cpu cpu3}% ${cpubar cpu3}
 ${color2}${font sans-serif:normal:size=8}${cpugraph cpu4 14}
