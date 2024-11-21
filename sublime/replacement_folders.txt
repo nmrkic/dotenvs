@@ -1,0 +1,4 @@
+ln -s /Users/nmrkic/tools/dotenvs/sublime/Preferences.sublime-settings ~/Library/Application\ Support/Sublime\ Text/Packages/User/Preferences.sublime-settings
+ln -s /Users/nmrkic/tools/dotenvs/sublime/Default\ \(OSX\).sublime-keymap ~/Library/Application\ Support/Sublime\ Text/Packages/User/
+ln -s /Users/nmrkic/tools/dotenvs/sublime/SublimeLinter.sublime-settings ~/Library/Application\ Support/Sublime\ Text/Packages/User/
+
