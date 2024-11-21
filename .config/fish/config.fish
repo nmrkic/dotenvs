@@ -5,7 +5,13 @@ fish_add_path /opt/local/lib
 
 set -x LANG en_US.UTF-8
 set -x LC_CTYPE UTF-8
-set -x PATH /Users/nmrkic/.pyenv/shims /Library/Frameworks/Python.framework/Versions/3.10/bin $PATH /Users/nmrkic/tools/maven/bin
+set -x PATH /Users/nmrkic/.pyenv/shims /Library/Frameworks/Python.framework/Versions/3.10/bin $PATH /Users/nmrkic/tools/maven/bin /Users/nmrkic/.krew/bin /Users/nmrkic/.local/bin
+set -x SM_PATH /Users/nmrkic/projects/monkey/smapply
+
+set -x LDFLAGS "-L/opt/homebrew/opt/libpq/lib"
+set -x CPPFLAGS "-I/opt/homebrew/opt/libpq/include"
+
+
 # nvm use
 # eval (python -m virtualfish compat_aliases)
 set -x PYTHONBREAKPOINT "pudb.set_trace"
@@ -47,9 +53,12 @@ alias gmt 'git mergetool'
 # -------------------------------------------------------------------
 # Docker
 # -------------------------------------------------------------------
-alias d-c 'docker-compose -f docker/prod/docker-compose.yml'
+alias docker-compose 'docker compose'
+alias d-c 'docker compose -f docker/dev/docker-compose-override.yml'
+# alias d-c 'docker compose -f docker/prod/docker-compose.yml'
+# alias d-c 'docker compose'
 alias d-s 'docker stop (docker ps -q)'
-alias d-u 'docker-compose up -d'
+alias d-u 'docker compose up -d'
 # -------------------------------------------------------------------
 # K8s
 # -------------------------------------------------------------------
@@ -60,11 +69,11 @@ alias kx 'kubectx'
 # Survey Monkey docker image aliases
 # -------------------------------------------------------------------
 function pullimages
-    APP_IMAGE=docker.corp.surveymonkey.com/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.corp.surveymonkey.com/smapply/smapply-app:branch-"$argv" docker-compose pull --no-parallel
+    APP_IMAGE=461454529543.dkr.ecr.us-west-2.amazonaws.com/smapply/smapply-k8s-app:"$argv" WEB_IMAGE=461454529543.dkr.ecr.us-west-2.amazonaws.com/smapply/smapply-k8s-web:"$argv" docker-compose pull
 end
 
 function startimages
-    APP_IMAGE=docker.corp.surveymonkey.com/smapply/smapply-app:branch-"$argv" JOBS_IMAGE=docker.corp.surveymonkey.com/smapply/smapply-app:branch-"$argv" docker-compose up -d
+    APP_IMAGE=461454529543.dkr.ecr.us-west-2.amazonaws.com/smapply/smapply-k8s-app:"$argv" WEB_IMAGE=461454529543.dkr.ecr.us-west-2.amazonaws.com/smapply/smapply-k8s-web:"$argv" docker-compose up -d 
 end
 
 function move_left
@@ -75,3 +84,7 @@ function move_right
     yabai -m window --display east; yabai -m display --focus east; yabai -m window --swap west
 end
 
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH

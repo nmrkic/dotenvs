@@ -10,7 +10,7 @@
 	{ "keys": ["u"], "command": "show_panel", "args": {"panel": "find_in_files"}, "context": [{"key": "settings.visual_mode"}] },
 	// { "keys": ["u"], "command": "undo", "context": [{"key": "settings.visual_mode"}]},
 	{ "keys": ["ctrl+r"], "command": "redo", "context": [{"key": "settings.command_mode"}]},
-	// { "keys": ["ctrl+k", "ctrl+b"], "command": "toggle_side_bar"},
+	{ "keys": ["ctrl+z"], "command": "toggle_side_bar"},
 	// { "keys": ["ctrl+k+l"], "command": "sublime_linter_lint" },
 	// { "keys": ["ctrl+k+a"], "command": "sublime_linter_panel_toggle" },
 	// { "keys": ["ctrl+k+n"], "command": "sublime_linter_goto_error",

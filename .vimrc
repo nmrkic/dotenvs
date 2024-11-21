@@ -8,3 +8,7 @@ filetype indent plugin on
 :augroup END
 set clipboard+=unnamed
 
+set tabstop=4
+set shiftwidth=4
+set expandtab
+

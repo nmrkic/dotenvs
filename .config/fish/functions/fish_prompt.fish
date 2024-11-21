@@ -39,8 +39,8 @@ function fish_prompt --description 'Write out the prompt'
         set -g __fish_prompt_hostname (hostname|cut -d . -f 1)
     end
 
-    # set kubenv (kubectl config current-context)
-    # echo -n -s "(" $kubenv ")" " "
+    set kubenv (kubectl config current-context)
+    echo -n -s "(" $kubenv ")" " "
 
     if set -q VIRTUAL_ENV
         echo -n -s "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "

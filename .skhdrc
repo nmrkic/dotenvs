@@ -1,36 +1,36 @@
 # change focus
-alt - h : yabai -m window --focus west || yabai -m display --focus west
-alt - j : yabai -m window --focus south
-alt - k : yabai -m window --focus north
-alt - l : yabai -m window --focus east || yabai -m display --focus east
+cmd - h : yabai -m window --focus west || yabai -m display --focus west
+cmd - j : yabai -m window --focus south
+cmd - k : yabai -m window --focus north
+cmd - l : yabai -m window --focus east || yabai -m display --focus east
 # change focus (using arrow keys)
-alt - left  : yabai -m window --focus west || yabai -m display --focus west
-alt - down  : yabai -m window --focus south
-alt - up    : yabai -m window --focus north
-alt - right : yabai -m window --focus east || yabai -m display --focus east
+cmd - left  : yabai -m window --focus west || yabai -m display --focus west
+cmd - down  : yabai -m window --focus south
+cmd - up    : yabai -m window --focus north
+cmd - right : yabai -m window --focus east || yabai -m display --focus east
 
 # change desktop (using arrow keys)
-alt + ctrl - left : yabai -m window --display west; yabai -m display --focus west
-alt + ctrl - down : yabai -m window --focus stack.next || yabai -m window --focus stack.first
-alt + ctrl - up : yabai -m window --focus stack.prev || yabai -m window --focus stack.last
-alt + ctrl - right : yabai -m window --display east; yabai -m display --focus east
+cmd + ctrl - left : yabai -m window --display west; yabai -m display --focus west
+cmd + ctrl - down : yabai -m window --focus stack.next || yabai -m window --focus stack.first
+cmd + ctrl - up : yabai -m window --focus stack.prev || yabai -m window --focus stack.last
+cmd + ctrl - right : yabai -m window --display east; yabai -m display --focus east
 
 # shift window in current workspace
-alt + shift - j : yabai -m window --swap south   
-alt + shift - k : yabai -m window --swap north  
-alt + shift - h : yabai -m window --swap west || move_left  
-alt + shift - l : yabai -m window --swap east || move_right 
+cmd + shift - j : yabai -m window --swap south   
+cmd + shift - k : yabai -m window --swap north  
+cmd + shift - h : yabai -m window --swap west || move_left  
+cmd + shift - l : yabai -m window --swap east || move_right 
 # alternatively, use the arrow keys
-alt + shift - down : yabai -m window --swap south   
-alt + shift - up : yabai -m window --swap north  
-alt + shift - left : yabai -m window --swap west || move_left  
-alt + shift - right : yabai -m window --swap east || move_right 
+cmd + shift - down : yabai -m window --swap south   
+cmd + shift - up : yabai -m window --swap north  
+cmd + shift - left : yabai -m window --swap west || move_left  
+cmd + shift - right : yabai -m window --swap east || move_right 
 
 # set insertion point in focused container
-alt + ctrl - h : yabai -m window --insert west
-alt + ctrl - j : yabai -m window --insert south
-alt + ctrl - k : yabai -m window --insert north
-alt + ctrl - l : yabai -m window --insert east
+cmd + ctrl - j : yabai -m window --insert south
+cmd + ctrl - k : yabai -m window --insert north
+cmd + ctrl - h : yabai -m window --insert west
+cmd + ctrl - l : yabai -m window --insert east
 # (alt) set insertion point in focused container using arrows
 # alt + ctrl - left  : yabai -m window --insert west
 # alt + ctrl - down  : yabai -m window --insert south
@@ -38,79 +38,79 @@ alt + ctrl - l : yabai -m window --insert east
 # alt + ctrl - right : yabai -m window --insert east
 
 # go back to previous workspace (kind of like back_and_forth in i3)
-alt - b : yabai -m space --focus recent
+cmd - b : yabai -m space --focus recent
 
 # move focused window to previous workspace
-alt + shift - b : yabai -m window --space recent; \
+cmd + shift - b : yabai -m window --space recent; \
                   yabai -m space --focus recent
 
 # move focused window to next/prev workspace
-alt + shift - 1 : yabai -m window --space 1
-alt + shift - 2 : yabai -m window --space 2
-alt + shift - 3 : yabai -m window --space 3
-alt + shift - 4 : yabai -m window --space 4
-alt + shift - 5 : yabai -m window --space 5
-alt + shift - 6 : yabai -m window --space 6
-alt + shift - 7 : yabai -m window --space 7
-alt + shift - 8 : yabai -m window --space 8
-alt + shift - 9 : yabai -m window --space 9
+cmd + shift - 1 : yabai -m window --space 1
+cmd + shift - 2 : yabai -m window --space 2
+cmd + shift - 3 : yabai -m window --space 3
+cmd + shift - 4 : yabai -m window --space 4
+cmd + shift - 5 : yabai -m window --space 5
+cmd + shift - 6 : yabai -m window --space 6
+cmd + shift - 7 : yabai -m window --space 7
+cmd + shift - 8 : yabai -m window --space 8
+cmd + shift - 9 : yabai -m window --space 9
 #alt + shift - 0 : yabai -m window --space 10
 
 
 # # mirror tree y-axis
-alt + shift - y : yabai -m space --mirror y-axis
+cmd + shift - y : yabai -m space --mirror y-axis
 
 # # mirror tree x-axis
-alt + shift - x : yabai -m space --mirror x-axis
+cmd + shift - x : yabai -m space --mirror x-axis
 
 # balance size of windows
-alt + shift - 0 : yabai -m space --balance
+cmd + shift - 0 : yabai -m space --balance
 
 # # mirror tree y-axis
-alt + shift - y : yabai -m space --mirror y-axis
+cmd + shift - y : yabai -m space --mirror y-axis
 
 # # mirror tree x-axis
-alt + shift - x : yabai -m space --mirror x-axis
+cmd + shift - x : yabai -m space --mirror x-axis
 
 # balance size of windows
-alt + shift - 0 : yabai -m space --balance
+cmd + shift - 0 : yabai -m space --balance
 
 # change layout of desktop
-alt - e : yabai -m space --layout bsp
-alt - f : yabai -m space --layout float
-alt - s : yabai -m space --layout stack
-alt - t : yabai -m window --toggle split
-alt + shift - f : yabai -m window --togle float
+cmd - e : yabai -m space --layout bsp
+cmd - f : yabai -m space --layout float
+cmd - s : yabai -m space --layout stack
+cmd - t : yabai -m window --toggle split
+cmd + shift - f : yabai -m window --togle float
 
 # cycle through stack windows
-# alt - p : yabai -m window --focus stack.next || yabai -m window --focus south
-# alt - n : yabai -m window --focus stack.prev || yabai -m window --focus north
+# cmd - p : yabai -m window --focus stack.next || yabai -m window --focus south
+# cmd - n : yabai -m window --focus stack.prev || yabai -m window --focus north
 
 # forwards
-# alt - p : yabai -m query --spaces --space \
+# cmd - p : yabai -m query --spaces --space \
 #            | jq -re ".index" \
 #            | xargs -I{} yabai -m query --windows --space {} \
 #            | jq -sre "add | map(select(.minimized != 1)) | sort_by(.display, .frame.y, .frame.x, .id) | reverse | nth(index(map(select(.focused == 1))) - 1).id" \
 #            | xargs -I{} yabai -m window --focus {}
 
 # backwards
-# alt - n : yabai -m query --spaces --space \
+# cmd - n : yabai -m query --spaces --space \
 #             | jq -re ".index" \
 #             | xargs -I{} yabai -m query --windows --space {} \
 #             | jq -sre "add | map(select(.minimized != 1)) | sort_by(.display, .frame.y, .frame.y, .id) | nth(index(map(select(.focused == 1))) - 1).id" \
 #            | xargs -I{} yabai -m window --focus {}
 # close focused window
 #
-alt + shift - q : yabai -m window --close
+cmd + shift - q : yabai -m window --close
 
 # enter fullscreen mode for the focused container
-alt - f : yabai -m window --toggle zoom-fullscreen
+cmd - f : yabai -m window --toggle zoom-fullscreen
 
 # toggle window native fullscreen
-alt + shift - f : yabai -m window --toggle native-fullscreen
+cmd + shift - f : yabai -m window --toggle native-fullscreen
 
 # open terminal
-alt - return : open -n /Applications/iTerm.app
-alt + shift - return : open -a "Google Chrome" -n
-alt + shift - s : open -a "Sublime Text" -n
-alt + shift - o : open -a "Microsoft Outlook.app" -n
+cmd - return : open -n /Applications/iTerm.app
+cmd + shift - return : open -a "Google Chrome" -n
+cmd + shift - s : open -a "Sublime Text" -n
+cmd + shift - o : open -a "Microsoft Outlook.app" -n

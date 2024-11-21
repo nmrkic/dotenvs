@@ -84,4 +84,5 @@
 	"show_errors_on_save": true,
 	"find_selected_text": true,
 	"close_windows_when_empty": true,
+	"index_files": true,
 }
