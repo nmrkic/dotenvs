@@ -81,4 +81,5 @@
 	"word_wrap": false,
 	"show_errors_on_save": true,
 	"index_files": true,
+	"line_numbers": true,
 }

@@ -1,0 +1,2 @@
+For console git diff:
+https://github.com/dandavison/delta/releases
