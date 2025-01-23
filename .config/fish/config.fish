@@ -1,4 +1,8 @@
-test $TERM != "screen"; and exec tmux
+if status is-interactive
+	and not set -q TMUX
+	and not set -q SSH_TTY
+	    test $TERM != "screen"; and exec tmux
+end
 set -x VIRTUALFISH_HOME /home/nebojsa/projects/.virtualenvs
 set -x GOPATH /home/nebojsa/projects/.go
 set -x GOROOT /usr/lib/go
@@ -10,8 +14,10 @@ set PATH $PATH $GOPATH/bin
 # set PATH $PATH ~/tools/android/tools/bin
 # set ANDROID_SDK_ROOT ~/tools/android/ 
 
-# eval (python -m virtualfish compat_aliases)
-
+set -gx PYENV_ROOT $HOME/.pyenv
+set -gx PATH $PYENV_ROOT/bin $PATH
+status --is-interactive; and source (pyenv init --path | psub)
+status --is-interactive; and source (pyenv init - | psub)
 
 # -------------------------------------------------------------------
 # directory information
@@ -59,3 +65,10 @@ alias d-u 'docker compose up -d'
 # -------------------------------------------------------------------
 alias kc 'kubectl'
 alias kx 'kubectx'
+# -------------------------------------------------------------------
+# Headphone aliases
+# -------------------------------------------------------------------
+alias WI-C100 'bluetoothctl connect 74:B7:E6:03:73:42'
+alias WI-C310 'bluetoothctl connect 90:7A:58:67:88:9D'
+alias touchpad_off 'xinput set-prop 17 214 0'
+alias touchpad_on 'xinput set-prop 17 214 1'

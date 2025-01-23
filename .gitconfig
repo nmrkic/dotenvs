@@ -1,7 +1,7 @@
 [user]
 	email = mrkic.nebojsa@gmail.com
 	name = Nebojsa Mrkic
-	signingkey = 7B575A703D16883497F025788F598A925033BBBD
+	signingkey = CF38377E23109A324DBF1B7F5B89580838604628
 [pull]
 	rese = false
 	rebase = false
@@ -10,7 +10,7 @@
 	sshCommand = ssh
 	pager = delta
 [commit]
-	gpgsign = false
+	gpgsign = true
 [init]
 	defaultBranch = main
 [interactive]
