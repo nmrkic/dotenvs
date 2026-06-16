@@ -1,0 +1,77 @@
+configuration {
+    modi:           "drun,run,window";
+    font:           "DejaVu Sans Mono 12";
+    show-icons:     true;
+    icon-theme:     "Papirus-Dark";
+    drun-display-format: "{name}";
+    window-format:  "{w} · {t}";
+}
+
+* {
+    bg:       #1a1a2e;
+    bg-alt:   #16213e;
+    fg:       #e0e0e0;
+    accent:   #FFA759;
+    urgent:   #e06c75;
+    selected: #FFA759;
+
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+window {
+    background-color: @bg;
+    border:           2px;
+    border-color:     @accent;
+    border-radius:    8px;
+    width:            500px;
+}
+
+mainbox {
+    background-color: @bg;
+    padding:          12px;
+    spacing:          8px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius:    6px;
+    padding:          8px 12px;
+    spacing:          8px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    text-color: @fg;
+}
+
+listview {
+    background-color: transparent;
+    lines:            8;
+    spacing:          4px;
+    padding:          4px 0;
+}
+
+element {
+    background-color: transparent;
+    border-radius:    6px;
+    padding:          8px 12px;
+    spacing:          8px;
+}
+
+element selected {
+    background-color: @accent;
+    text-color:       #000000;
+}
+
+element-icon {
+    size: 20px;
+}
+
+element-text {
+    vertical-align: 0.5;
+}

@@ -28,6 +28,23 @@
 		"runserver",
 		"py"
 	],
+	"folder_exclude_patterns": [
+		".svn",
+		".git",
+		".hg",
+		"CVS",
+		"__pycache__",
+		".pytest_cache",
+		".ruff_cache",
+
+	],
+	"file_exclude_patterns": [
+		"*.pyc",
+		"*.pyo",
+		"*.psd",
+		"*.db",
+		"*.sublime-workspace"
+	],
 	"anaconda_linting": false,
 	"auto_complete": true,
 	"auto_complete_commit_on_tab": true,
@@ -47,7 +64,7 @@
 	"color_scheme": "Packages/Theme - Midnight/Midnight.dark.tmTheme",
 	"draw_white_space": "all",
 	"ensure_newline_at_eof_on_save": true,
-	"font_size": 15,
+	"font_size": 14,
 	"ignored_packages":
 	[
 	],
@@ -80,6 +97,6 @@
 	"vintage_use_clipboard": true,
 	"word_wrap": false,
 	"show_errors_on_save": true,
-	"index_files": true,
+	"index_files": false,
 	"line_numbers": true,
 }

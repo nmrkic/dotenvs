@@ -8,13 +8,10 @@
 [core]
 	editor = vim
 	sshCommand = ssh
-	pager = delta
 [commit]
 	gpgsign = true
 [init]
 	defaultBranch = main
-[interactive]
-	difffilter = delta --color-only
 [delta]
 	navigate = true
 	light = false
@@ -23,3 +20,7 @@
 
 [merge]
 	conflictstyle = diff3
+[credential]
+	helper = store
+[push]
+	autoSetupRemote = true

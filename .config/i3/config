@@ -1,0 +1,164 @@
+# i3 config - Regolith-style setup
+# Based on regolith3 backup
+
+set $mod Mod4
+
+# Font
+font pango:monospace 8
+
+# Named workspaces (from Xresources backup)
+set $ws1  "1:Terminal"
+set $ws2  "2:Sublime"
+set $ws3  "3:Browser"
+set $ws4  "4:Chats"
+set $ws5  "5:Meet"
+set $ws6  "6:Six"
+set $ws7  "7:Seven"
+set $ws8  "8:Eight"
+set $ws9  "9:Nine"
+set $ws10 "10:Ten"
+
+# Switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+# Move container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+default_border pixel 2
+default_floating_border pixel 2
+hide_edge_borders smart
+
+# Colors - orange accent (#FFA759) from Xresources
+# class                 border  backgr. text    indicator child_border
+client.focused          #FFA759 #FFA759 #000000 #FFA759   #FFA759
+client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+client.urgent           #2f343a #900000 #ffffff #900000   #900000
+
+# Gaps (from Xresources: inner 8, outer 4)
+gaps inner 4
+gaps outer 0
+smart_gaps on
+
+# Startup
+exec --no-startup-id xrdb -merge ~/.Xresources
+exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id xset s off -dpms
+exec --no-startup-id /usr/libexec/gsd-xsettings
+exec --no-startup-id nm-applet
+exec --no-startup-id ~/.screenlayout/auto-monitors.sh
+exec --no-startup-id numlockx on
+exec --no-startup-id /usr/bin/picom
+exec_always --no-startup-id sleep 1 && feh --bg-fill /home/nebojsa/Pictures/dark-blue.jpg
+exec --no-startup-id sleep 2 && conky
+
+# Screenshots
+bindsym Print exec --no-startup-id flameshot gui
+bindsym $mod+Print exec --no-startup-id flameshot full -c
+
+# Volume keys
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+focus_follows_mouse no
+
+# Mouse drag for floating windows
+floating_modifier $mod
+tiling_drag modifier titlebar
+
+# Terminal
+bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Shift+Return exec google-chrome
+
+# Launcher (rofi - Regolith style)
+bindsym $mod+space exec --no-startup-id rofi -show drun -modi drun
+
+# Kill window
+bindsym $mod+Shift+q kill
+
+# Focus
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# Move
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# Layout
+bindsym $mod+b split h
+bindsym $mod+v split v
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+a focus parent
+
+# Floating rules (from config.d/floating.conf)
+for_window [instance="gnome-calendar"]   floating enable
+for_window [instance="gnome-calculator"] floating enable
+
+# Reload / restart / exit / power
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec --no-startup-id bash -c '[ "$(echo -e "Da\nNe" | rofi -dmenu -p "Izlaz iz i3?")" = "Da" ] && i3-msg exit'
+bindsym $mod+Shift+p exec --no-startup-id bash -c '[ "$(echo -e "Da\nNe" | rofi -dmenu -p "Ugasi sistem?")" = "Da" ] && systemctl poweroff'
+bindsym $mod+Shift+b exec --no-startup-id bash -c '[ "$(echo -e "Da\nNe" | rofi -dmenu -p "Restartuj sistem?")" = "Da" ] && systemctl reboot'
+
+# Resize mode
+mode "resize" {
+    bindsym Left  resize shrink width  10 px or 10 ppt
+    bindsym Down  resize grow   height 10 px or 10 ppt
+    bindsym Up    resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow   width  10 px or 10 ppt
+    bindsym h resize shrink width  10 px or 10 ppt
+    bindsym j resize grow   height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow   width  10 px or 10 ppt
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+bindsym $mod+r mode "resize"
+
+bindsym $mod+ctrl+shift+Left  move workspace to output left
+bindsym $mod+ctrl+shift+Right move workspace to output right
+bindsym $mod+ctrl+shift+Up    move workspace to output up
+bindsym $mod+ctrl+shift+Down  move workspace to output down
+
+# Bar handled by polybar (see ~/.config/polybar/)

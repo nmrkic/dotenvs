@@ -10,6 +10,11 @@ set -x GOBIN /home/nebojsa/projects/.go/bin
 #set -x GOPATH /home/nebojsa/tools/golang_courses/workspace
 set PATH $PATH ~/.local/bin
 set PATH $PATH $GOPATH/bin
+set PATH $PATH /opt/nvim-linux-x86_64/bin/
+set PATH $PATH $HOME/.acme.sh
+
+if test -f ~/.fish_secrets.fish; source ~/.fish_secrets.fish; end
+
 # set PATH $PATH ~/tools/android/tools
 # set PATH $PATH ~/tools/android/tools/bin
 # set ANDROID_SDK_ROOT ~/tools/android/ 
@@ -61,6 +66,10 @@ alias d-c 'docker compose'
 alias d-s 'docker stop (docker ps -q)'
 alias d-u 'docker compose up -d'
 # -------------------------------------------------------------------
+# UV install into active env
+# -------------------------------------------------------------------
+# alias uv 'uv --active'
+# -------------------------------------------------------------------
 # K8s
 # -------------------------------------------------------------------
 alias kc 'kubectl'
@@ -70,5 +79,40 @@ alias kx 'kubectx'
 # -------------------------------------------------------------------
 alias WI-C100 'bluetoothctl connect 74:B7:E6:03:73:42'
 alias WI-C310 'bluetoothctl connect 90:7A:58:67:88:9D'
-alias touchpad_off 'xinput set-prop 17 214 0'
-alias touchpad_on 'xinput set-prop 17 214 1'
+alias One 'bluetoothctl connect 64:A2:F9:FE:FE:99'
+# ------------------------------------------------------------------
+# TouchPad
+# ------------------------------------------------------------------
+function touchpad_off
+    xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 210 0
+end
+function touchpad_on
+    xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 210 1
+end
+# ------------------------------------------------------------------
+# i3 socket
+# ------------------------------------------------------------------
+set -x I3SOCK (ls /run/user/1000/i3/ipc-socket.* 2>/dev/null | head -1)
+
+# ------------------------------------------------------------------
+# Claude AI
+# ------------------------------------------------------------------
+alias cc='claude'
+
+
+# ------------------------------------------------------------------
+# What is my ip
+# ------------------------------------------------------------------
+alias whatismyip='curl ifconfig.me'
+
+
+complete -c claude --wraps claude
+
+
+# pnpm
+set -gx PNPM_HOME "/home/nebojsa/.local/share/pnpm"
+if not string match -q -- $PNPM_HOME $PATH
+  set -gx PATH "$PNPM_HOME" $PATH
+end
+# pnpm end
+

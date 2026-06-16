@@ -64,21 +64,27 @@ ${color1}${font sans-serif:bold:size=8}SYSTEM ${hr 2}
 ${color2}${font sans-serif:normal:size=8}$sysname $kernel $alignr $machine
 # Host:$alignr$nodename
 Uptime:$alignr$uptime
-Chicago Time: $alignr${tztime UTC+5 %H:%M}${font}
+ECT Time: $alignr${tztime UTC+5 %H:%M}${font}
 Battery: ${battery_percent BAT0}% ${alignr}${battery_bar 5,50 BAT0} 
+Battery charging: ${execi 30 upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep 'energy-rate:' | awk '{print $2 + 0.00}'}
 
-${color1}${font sans-serif:bold:size=8}PROCESSORS ${hr 2}
-${color1}CPU Core 0 temp: ${execi 30 sensors | grep 'Core 0' | awk '{print $3 + 0.00}'}°C
-${color2}${font sans-serif:normal:size=8}${cpugraph cpu1 14}
-${color1}CPU1: ${cpu cpu1}% ${cpubar cpu1}
-${color2}${font sans-serif:normal:size=8}${cpugraph cpu2 14}
-${color1}CPU2: ${cpu cpu2}% ${cpubar cpu2}
-${font sans-serif:bold:size=8}
-${color1}CPU Core 4 temp: ${execi 30 sensors | grep 'Core 4' | awk '{print $3 + 0.00}'}°C
-${color2}${font sans-serif:normal:size=8}${cpugraph cpu3 14}
-${color1}CPU3: ${cpu cpu3}% ${cpubar cpu3}
-${color2}${font sans-serif:normal:size=8}${cpugraph cpu4 14}
-${color1}CPU4: ${cpu cpu4}% ${cpubar cpu4}
+
+${color1}${font sans-serif:bold:size=8}PROCESSOR ${hr 2}
+${color1}CPU temp: ${execi 30 sensors | grep 'CPU:' | awk '{print $2 + 0.00}'}°C
+${color1}Fan1 speed: ${execi 30 sensors | grep 'fan1:' | awk '{print $2 }'} RPM
+${color1}Fan2 speed: ${execi 30 sensors | grep 'fan2:' | awk '{print $2 }'} RPM
+${color2}${font sans-serif:normal:size=8}${cpugraph}
+${color1}CPU: ${cpu}% ${cpubar}
+${color2}${font sans-serif:normal:size=8}${execgraph "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits"}
+${color1}GPU: ${execi 2 nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits}% ${execibar 2 nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits}
+# ${color2}${font sans-serif:normal:size=8}${cpugraph cpu2 14}
+# ${color1}CPU2: ${cpu cpu2}% ${cpubar cpu2}
+# ${font sans-serif:bold:size=8}
+# ${color1}CPU Core 4 temp: ${execi 30 sensors | grep 'Core 4' | awk '{print $3 + 0.00}'}°C
+# ${color2}${font sans-serif:normal:size=8}${cpugraph cpu3 14}
+# ${color1}CPU3: ${cpu cpu3}% ${cpubar cpu3}
+# ${color2}${font sans-serif:normal:size=8}${cpugraph cpu4 14}
+# ${color1}CPU4: ${cpu cpu4}% ${cpubar cpu4}
 
 ${font sans-serif:bold:size=8}TOP MEMORY PROCESSES ${hr 2}
 Name${alignr}PID         ${alignr}MB ${color2}${font sans-serif:normal:size=8}
@@ -126,5 +132,7 @@ ULS:${upspeed wlp2s0} kb/s $alignr total: ${totalup wlp2s0}
 ${endif}
 
 ${color1}${font sans-serif:bold:size=8}BATTERY ${hr 2}
-${color2}BTHead: $alignr ${execi 60 /home/nebojsa/tools/dotenvs/battery_level/battery_level.py 74:B7:E6:03:73:42 1}
+${color2}WI100: $alignr ${execi 30 /home/nebojsa/tools/dotenvs/battery_level/battery_level_310.py 74_B7_E6_03_73_42}
+${color2}WI310: $alignr ${execi 30 /home/nebojsa/tools/dotenvs/battery_level/battery_level_310.py 90_7A_58_67_88_9D}
+${color2}OnePlus: $alignr ${execi 30 /home/nebojsa/tools/dotenvs/battery_level/battery_level_310.py 64_A2_F9_FE_FE_99}
 ]];
