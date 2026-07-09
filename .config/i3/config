@@ -59,12 +59,15 @@ gaps outer 0
 smart_gaps on
 
 # Startup
+exec --no-startup-id dunst
 exec --no-startup-id xrdb -merge ~/.Xresources
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xset s off -dpms
 exec --no-startup-id /usr/libexec/gsd-xsettings
 exec --no-startup-id nm-applet
+exec --no-startup-id sh -c 'for i in 1 2 3; do setxkbmap -layout us,rs(latin),rs -option grp:alt_shift_toggle; sleep 2; done'
+exec --no-startup-id sh -c 'while true; do ~/.config/i3/scripts/layout-notify; sleep 1; done'
 exec --no-startup-id ~/.screenlayout/auto-monitors.sh
 exec --no-startup-id numlockx on
 exec --no-startup-id /usr/bin/picom
@@ -82,7 +85,12 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
+# Brightness keys
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+
 focus_follows_mouse no
+mouse_warping none
 
 # Mouse drag for floating windows
 floating_modifier $mod
@@ -136,8 +144,8 @@ for_window [instance="gnome-calculator"] floating enable
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec --no-startup-id bash -c '[ "$(echo -e "Da\nNe" | rofi -dmenu -p "Izlaz iz i3?")" = "Da" ] && i3-msg exit'
-bindsym $mod+Shift+p exec --no-startup-id bash -c '[ "$(echo -e "Da\nNe" | rofi -dmenu -p "Ugasi sistem?")" = "Da" ] && systemctl poweroff'
-bindsym $mod+Shift+b exec --no-startup-id bash -c '[ "$(echo -e "Da\nNe" | rofi -dmenu -p "Restartuj sistem?")" = "Da" ] && systemctl reboot'
+bindsym $mod+Shift+p exec --no-startup-id bash -c 'out=$(echo -e "Da\nNe" | rofi -dmenu -p "Ugasi sistem?" -mesg "Pritisni <b>p</b> za brzu potvrdu" -markup-rows -kb-custom-1 "p"); [ "$?" = 10 -o "$out" = "Da" ] && systemctl poweroff'
+bindsym $mod+Shift+b exec --no-startup-id bash -c 'out=$(echo -e "Da\nNe" | rofi -dmenu -p "Restartuj sistem?" -mesg "Pritisni <b>b</b> za brzu potvrdu" -markup-rows -kb-custom-1 "b"); [ "$?" = 10 -o "$out" = "Da" ] && systemctl reboot'
 
 # Resize mode
 mode "resize" {

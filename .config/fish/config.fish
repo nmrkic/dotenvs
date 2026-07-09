@@ -84,10 +84,10 @@ alias One 'bluetoothctl connect 64:A2:F9:FE:FE:99'
 # TouchPad
 # ------------------------------------------------------------------
 function touchpad_off
-    xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 210 0
+    xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 209 0
 end
 function touchpad_on
-    xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 210 1
+    xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 209 1
 end
 # ------------------------------------------------------------------
 # i3 socket
@@ -116,3 +116,5 @@ if not string match -q -- $PNPM_HOME $PATH
 end
 # pnpm end
 
+set -x DOTNET_ROOT $HOME/.dotnet
+alias fixmouse="xinput disable 18 && sleep 0.5 && xinput enable 18 && echo Mouse reset OK"
