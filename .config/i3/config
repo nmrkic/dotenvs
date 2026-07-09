@@ -144,8 +144,8 @@ for_window [instance="gnome-calculator"] floating enable
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec --no-startup-id bash -c '[ "$(echo -e "Da\nNe" | rofi -dmenu -p "Izlaz iz i3?")" = "Da" ] && i3-msg exit'
-bindsym $mod+Shift+p exec --no-startup-id bash -c 'out=$(echo -e "Da\nNe" | rofi -dmenu -p "Ugasi sistem?" -mesg "Pritisni <b>p</b> za brzu potvrdu" -markup-rows -kb-custom-1 "p"); [ "$?" = 10 -o "$out" = "Da" ] && systemctl poweroff'
-bindsym $mod+Shift+b exec --no-startup-id bash -c 'out=$(echo -e "Da\nNe" | rofi -dmenu -p "Restartuj sistem?" -mesg "Pritisni <b>b</b> za brzu potvrdu" -markup-rows -kb-custom-1 "b"); [ "$?" = 10 -o "$out" = "Da" ] && systemctl reboot'
+bindsym $mod+Shift+p exec --no-startup-id ~/.config/i3/scripts/i3-confirm-power.sh poweroff
+bindsym $mod+Shift+b exec --no-startup-id ~/.config/i3/scripts/i3-confirm-power.sh reboot
 
 # Resize mode
 mode "resize" {

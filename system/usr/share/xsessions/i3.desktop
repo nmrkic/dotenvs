@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=i3
+Comment=improved dynamic tiling window manager
+Exec=/home/nebojsa/.local/bin/i3-x11
+TryExec=i3
+Type=XSession
+X-LightDM-DesktopName=i3
+DesktopNames=i3
+Keywords=tiling;wm;windowmanager;window;manager;
