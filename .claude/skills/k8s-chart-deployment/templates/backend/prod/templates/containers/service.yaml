@@ -1,0 +1,97 @@
+{{- $service_secrets := .Values.secrets }}
+{{- $version := .Values.app_version }}
+{{- $registry_link := .Values.registry }}
+{{- range .Values.services }}
+{{- if .need_secrets }}
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: {{ .name | replace "_" "-" }}-secrets
+  labels:
+    app: {{ .name | replace "_" "-" }}-secrets
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: __PROJECT__-secrets-store
+    kind: SecretStore
+  target:
+    name: {{ .name | replace "_" "-" }}-secrets
+    creationPolicy: Owner
+  data:
+  {{- range $service_secrets }}
+  - secretKey: {{ .name | quote }}
+    remoteRef:
+      key: {{ .key | quote }}
+      property: {{ .name | quote }}
+  {{- end }}
+---
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name | replace "_" "-" }}
+  labels:
+    app: {{ .name | replace "_" "-" }}
+spec:
+  replicas: {{ .replicas }}
+  revisionHistoryLimit: 0
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: {{ .name | replace "_" "-" }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name | replace "_" "-" }}
+    spec:
+      serviceAccountName: __PROJECT__-secrets-service-account
+      containers:
+      - name: {{ .name | replace "_" "-" }}
+        image: '{{ $registry_link }}/{{ .imageName | default .name }}:{{ $version }}'
+        imagePullPolicy: Always
+        {{- if .command }}
+        command: ["sh", "-c", "{{ .command }}"]
+        {{- end }}
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        envFrom:
+        - configMapRef:
+            name: common-config
+        {{- if .need_secrets }}
+        - secretRef:
+            name: {{ .name | replace "_" "-" }}-secrets
+        {{- end }}
+
+        volumeMounts:
+        - name: temp
+          mountPath: /tmp
+        - name: uploads
+          mountPath: /opt/app/uploads
+        - name: db-certificate
+          mountPath: /mnt/secrets-store
+          readOnly: true
+
+      volumes:
+      - name: temp
+        emptyDir: {}
+      - name: uploads
+        emptyDir: {}
+      - name: db-certificate
+        secret:
+          secretName: __PROJECT__-db-certificate
+          items:
+          - key: __PROJECT__-production-mysql-cert.pem
+            path: __PROJECT__-production-mysql-cert.pem
+      imagePullSecrets:
+      - name: regcred
+      restartPolicy: Always
+---
+{{- end }}

@@ -1,0 +1,59 @@
+{{- $version := .Values.app_version }}
+{{- $registry_link := .Values.registry }}
+{{- range .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name | replace "_" "-" }}
+  labels:
+    app: {{ .name | replace "_" "-" }}
+spec:
+  replicas: {{ .replicas }}
+  revisionHistoryLimit: 0
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: {{ .name | replace "_" "-" }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name | replace "_" "-" }}
+    spec:
+      containers:
+      - name: {{ .name | replace "_" "-" }}
+        image: '{{ $registry_link }}/{{ .imageName | default .name }}:{{ $version }}'
+        imagePullPolicy: Always
+        {{- if .command }}
+        command: ["sh", "-c", "{{ .command }}"]
+        {{- end }}
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        envFrom:
+        - configMapRef:
+            name: common-config
+        - configMapRef:
+            name: secret-config
+        volumeMounts:
+        - name: temp
+          mountPath: /tmp
+        - name: uploads
+          mountPath: /opt/app/uploads
+
+      volumes:
+      - name: temp
+        emptyDir: {}
+      - name: uploads
+        emptyDir: {}
+      imagePullSecrets:
+      - name: regcred
+      restartPolicy: Always
+---
+{{- end }}

@@ -84,6 +84,13 @@ ln -sfn "$REPO/.screenlayout" ~/.screenlayout
 mkdir -p ~/.local/bin ~/.local/share/xsessions
 ln -sf "$REPO/.local/bin/i3-x11"              ~/.local/bin/i3-x11
 ln -sf "$REPO/.local/share/xsessions/i3.desktop" ~/.local/share/xsessions/i3.desktop
+
+# Claude Code (vidi sekciju 7)
+mkdir -p ~/.claude
+ln -sf  "$REPO/.claude/settings.json" ~/.claude/settings.json
+ln -sfn "$REPO/.claude/commands"      ~/.claude/commands
+# ako ~/.claude/skills već postoji kao direktorijum, prvo ga premesti/obriši
+ln -sfn "$REPO/.claude/skills"        ~/.claude/skills
 ```
 
 Fajlovi ispod `system/` u ovom repou **nisu** symlink-ovani (žive van `$HOME`,
@@ -107,6 +114,9 @@ instaliraju se ručno, vidi sekciju 4.
 | `system/usr/share/xsessions/i3.desktop` | *(ručno kopirati, sudo)* | **stvarni** xsession entry koji GDM koristi |
 | `system/usr/local/bin/google-chrome` | *(ručno kopirati, sudo)* | wrapper sa GPU/WebRTC flag-ovima za Chrome |
 | `.conkyrc`, `.vimrc`, `.Xresources`, `.tmux.conf`, `.tmate.conf` | `~/...` | standardni dotfile-ovi |
+| `.claude/skills/` | `~/.claude/skills` | globalni Claude Code skill-ovi (ceo direktorijum) |
+| `.claude/commands/` | `~/.claude/commands` | globalne slash komande |
+| `.claude/settings.json` | `~/.claude/settings.json` | Claude Code podešavanja (permissions, tema) |
 
 ## 4. Chrome / X11 fix
 
@@ -178,3 +188,26 @@ program (source u `layout-notify.c`, koristi samo `libX11`/XKBlib — treba
 `libx11-dev` paket; kompajlirati sa `gcc -o layout-notify layout-notify.c -lX11`
 ako fali binarni fajl na novom sistemu) koji šalje dunst notifikaciju kad se
 layout promeni.
+
+## 7. Claude Code
+
+U repou je samo ono što se prenosi sa računara na računar:
+
+- `.claude/skills/` — moji globalni skill-ovi; ceo direktorijum je symlink, pa
+  svaki nov skill napravljen u `~/.claude/skills` odmah stoji u repou spreman
+  za commit. Claude u isti direktorijum piše i `synced/` (skill-ovi koje sam
+  sinhronizuje sa naloga) — taj pod-direktorijum je u `.gitignore`.
+- `.claude/commands/` — globalne slash komande; ceo direktorijum je symlink,
+  pa sve što se doda u `~/.claude/commands` završi u repou.
+- `.claude/settings.json` — podešavanja (permissions allow/deny, tema).
+
+Namerno **nije** u repou:
+
+- `~/.claude.json` — sadrži podatke o nalogu (`oauthAccount`, `userID`,
+  `machineID`), istoriju projekata sa lokalnim putanjama i keš; Claude ga stalno
+  prepisuje, pa bi symlink ionako bio zamenjen običnim fajlom.
+- `~/.claude/.credentials.json` — login token.
+- `~/.claude/settings.local.json`, `projects/`, `history.jsonl`, `sessions/` i
+  ostalo — stanje vezano za ovaj računar.
+
+Na novom računaru se prvo uradi `claude` login, pa onda symlink-ovi iz sekcije 2.

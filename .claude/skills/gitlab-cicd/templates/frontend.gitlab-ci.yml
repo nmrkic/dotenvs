@@ -1,0 +1,341 @@
+default:
+  image: docker:27.5.1
+  services:
+    - name: docker:27.5.1-dind
+      command: ["--experimental"]
+  before_script:
+    - echo registry $HARBOR_HOST
+    - mkdir -p ~/.docker
+    - export DOCKER_CLI_EXPERIMENTAL=enabled
+    - until docker info; do sleep 2; done
+    - docker login -u "$HARBOR_USERNAME" -p "$HARBOR_PASSWORD" $HARBOR_HOST
+    - docker --version
+    - apk add --no-cache curl
+    - docker compose --version
+    - wget -O /usr/local/bin/docker-buildx https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-amd64
+    - chmod +x /usr/local/bin/docker-buildx
+    - docker context create tls-environment
+    - docker buildx create --use --name multi-arch-builder --use tls-environment --platform linux/amd64,linux/arm64
+    - docker buildx inspect --bootstrap multi-arch-builder
+  after_script:
+    - docker system prune --all --force
+
+variables:
+  REGISTRY: $HARBOR_HOST/$HARBOR_PROJECT
+  BUILDX_VERSION: "v0.10.4"
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  DOCKER_DRIVER: overlay2
+  DOCKER_BUILDKIT: 1
+  TRIGGER_URL_BACKEND: https://__GITLAB_HOST__/api/v4/projects/__PAIRED_PROJECT_ID__/trigger/pipeline
+
+stages:
+  - init
+  - test
+  - build
+  - deploy
+
+release-version:
+  image: node:dubnium
+  stage: init
+  before_script:
+    - git config --global user.email "${CI_GIT_USER_EMAIL}"
+    - git config --global user.name "${CI_GIT_USER_USERNAME}"
+    - git config --global http.sslverify false
+  after_script:
+    - ""
+  script:
+    - export APP_VERSION=$(echo $CI_COMMIT_TAG | sed 's/^v//')
+    - grep -v "APP_VERSION" .env.example > .env
+    - echo "APP_VERSION=${APP_VERSION}" >> .env
+  artifacts:
+    paths:
+      - .env
+    expire_in: 1 day
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: on_success
+
+branch-version:
+  stage: init
+  script:
+    - export APP_VERSION=`echo $CI_COMMIT_REF_NAME | cut -d/ -f2`
+    - grep -v "APP_VERSION" .env.example > .env
+    - echo "APP_VERSION=${APP_VERSION}" >> .env
+    - export TRIGGER_BRANCH=master
+    - if [[ $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == dev ]] ; then export TRIGGER_BRANCH=dev ; fi
+    - curl --request POST -k -F "token=${TRIGGER_TOKEN}" -F "variables[ISSUE_VERSION]=${APP_VERSION}" -F "ref=${TRIGGER_BRANCH}"  ${TRIGGER_URL_BACKEND}
+  after_script:
+    - ""
+  artifacts:
+    paths:
+      - .env
+    expire_in: 1 day
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+
+default-version:
+  image: dtzar/helm-kubectl
+  stage: init
+  before_script:
+    - ""
+  after_script:
+    - ""
+  script:
+    - grep -v "APP_VERSION" .env.example > .env
+    - export APP_VERSION=dev
+    - echo "APP_VERSION=$APP_VERSION" >> .env
+  artifacts:
+    paths:
+      - .env
+    expire_in: 1 day
+  rules:
+    - if: '$ISSUE_VERSION'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: always
+
+build-arm64:
+  stage: build
+  tags:
+    - arm
+  script:
+    - APP_VERSION=`grep APP_VERSION .env | xargs`
+    - export APP_VERSION=${APP_VERSION#*=}
+    - docker buildx bake $SERVICE-arm64 --load
+    - docker tag ${REGISTRY}/$SERVICE:latest-arm64 ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker tag ${REGISTRY}/$SERVICE:latest-arm64 ${REGISTRY}/$SERVICE:latest
+    - docker push ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker push ${REGISTRY}/$SERVICE:latest
+    - export REPO_DIGEST_ARM64=$(docker inspect --format='{{index .RepoDigests 0}}' ${REGISTRY}/$SERVICE:${APP_VERSION})
+    - echo "REPO_DIGEST_ARM64=$REPO_DIGEST_ARM64" >> $SERVICE-arm64.env
+  parallel:
+    matrix:
+      - SERVICE: [__BUILD_SERVICES__]
+  artifacts:
+    paths:
+      - .env
+      - "*-arm64.env"
+    expire_in: 1 day
+  rules:
+    - if: '$ISSUE_VERSION'
+      when: never
+    - if: '$CI_COMMIT_TAG'
+      when: on_success
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: on_success
+
+build-amd64:
+  stage: build
+  tags:
+    - amd
+  script:
+    - APP_VERSION=`grep APP_VERSION .env | xargs`
+    - export APP_VERSION=${APP_VERSION#*=}
+    - docker buildx bake $SERVICE-amd64 --load
+    - docker tag ${REGISTRY}/$SERVICE:latest-amd64 ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker tag ${REGISTRY}/$SERVICE:latest-amd64 ${REGISTRY}/$SERVICE:latest
+    - docker push ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker push ${REGISTRY}/$SERVICE:latest
+    - export REPO_DIGEST_AMD64=$(docker inspect --format='{{index .RepoDigests 0}}' ${REGISTRY}/$SERVICE:${APP_VERSION})
+    - echo "REPO_DIGEST_AMD64=$REPO_DIGEST_AMD64" >> $SERVICE-amd64.env
+  parallel:
+    matrix:
+      - SERVICE: [__BUILD_SERVICES__]
+  artifacts:
+    paths:
+      - .env
+      - "*-amd64.env"
+    expire_in: 1 day
+  rules:
+    - if: '$ISSUE_VERSION'
+      when: never
+    - if: '$CI_COMMIT_TAG'
+      when: on_success
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: on_success
+
+build-manifest:
+  stage: build
+  needs: [build-arm64, build-amd64]
+  script:
+    - docker image ls
+    - cat .env
+    - APP_VERSION=`grep APP_VERSION .env | xargs`
+    - export APP_VERSION=${APP_VERSION#*=}
+    - REPO_DIGEST_ARM64=`grep REPO_DIGEST_ARM64 $SERVICE-arm64.env | xargs`
+    - export REPO_DIGEST_ARM64=${REPO_DIGEST_ARM64#*=}
+    - REPO_DIGEST_AMD64=`grep REPO_DIGEST_AMD64 $SERVICE-amd64.env | xargs`
+    - export REPO_DIGEST_AMD64=${REPO_DIGEST_AMD64#*=}
+    - docker manifest create ${REGISTRY}/$SERVICE:${APP_VERSION} ${REPO_DIGEST_ARM64} ${REPO_DIGEST_AMD64}
+    - docker manifest create ${REGISTRY}/$SERVICE:latest ${REPO_DIGEST_ARM64} ${REPO_DIGEST_AMD64}
+    - docker manifest push ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker manifest push ${REGISTRY}/$SERVICE:latest
+  parallel:
+    matrix:
+      - SERVICE: [__BUILD_SERVICES__]
+  rules:
+    - if: '$ISSUE_VERSION'
+      when: never
+    - if: '$CI_COMMIT_TAG'
+      when: on_success
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: on_success
+
+build-api-amd64:
+  stage: build
+  tags:
+    - amd
+  artifacts:
+    paths:
+      - .env
+      - "*-amd64.env"
+    expire_in: 1 day
+  script:
+    - export APP_VERSION=${ISSUE_VERSION}
+    - docker manifest inspect ${REGISTRY}/$SERVICE:$ISSUE_VERSION > /dev/null && exit || true
+    - mv .env.example .env
+    - docker buildx bake $SERVICE-amd64 --load
+    - docker tag ${REGISTRY}/$SERVICE:latest-amd64 ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker tag ${REGISTRY}/$SERVICE:latest-amd64 ${REGISTRY}/$SERVICE:latest
+    - docker push ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker push ${REGISTRY}/$SERVICE:latest
+    - export REPO_DIGEST_AMD64=$(docker inspect --format='{{index .RepoDigests 0}}' ${REGISTRY}/$SERVICE:${APP_VERSION})
+    - echo "REPO_DIGEST_AMD64=$REPO_DIGEST_AMD64" >> $SERVICE-amd64.env
+  parallel:
+    matrix:
+      - SERVICE: [__BUILD_SERVICES__]
+  rules:
+    - if: '$ISSUE_VERSION'
+      when: always
+
+build-api-arm64:
+  stage: build
+  tags:
+    - arm
+  artifacts:
+    paths:
+      - .env
+      - "*-arm64.env"
+    expire_in: 1 day
+  script:
+    - export APP_VERSION=${ISSUE_VERSION}
+    - docker manifest inspect ${REGISTRY}/$SERVICE:$ISSUE_VERSION > /dev/null && exit || true
+    - mv .env.example .env
+    - docker buildx bake $SERVICE-arm64 --load
+    - docker tag ${REGISTRY}/$SERVICE:latest-arm64 ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker tag ${REGISTRY}/$SERVICE:latest-arm64 ${REGISTRY}/$SERVICE:latest
+    - docker push ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker push ${REGISTRY}/$SERVICE:latest
+    - export REPO_DIGEST_ARM64=$(docker inspect --format='{{index .RepoDigests 0}}' ${REGISTRY}/$SERVICE:${APP_VERSION})
+    - echo "REPO_DIGEST_ARM64=$REPO_DIGEST_ARM64" >> $SERVICE-arm64.env
+  parallel:
+    matrix:
+      - SERVICE: [__BUILD_SERVICES__]
+  rules:
+    - if: '$ISSUE_VERSION'
+      when: always
+
+build-api-manifest:
+  stage: build
+  needs: [build-api-arm64, build-api-amd64]
+  script:
+    - export APP_VERSION=${ISSUE_VERSION}
+    - docker manifest inspect ${REGISTRY}/$SERVICE:$ISSUE_VERSION > /dev/null && exit || true
+    - REPO_DIGEST_ARM64=`grep REPO_DIGEST_ARM64 $SERVICE-arm64.env | xargs`
+    - export REPO_DIGEST_ARM64=${REPO_DIGEST_ARM64#*=}
+    - REPO_DIGEST_AMD64=`grep REPO_DIGEST_AMD64 $SERVICE-amd64.env | xargs`
+    - export REPO_DIGEST_AMD64=${REPO_DIGEST_AMD64#*=}
+    - docker manifest create ${REGISTRY}/$SERVICE:${APP_VERSION} $REPO_DIGEST_ARM64 $REPO_DIGEST_AMD64
+    - docker manifest create ${REGISTRY}/$SERVICE:latest $REPO_DIGEST_ARM64 $REPO_DIGEST_AMD64
+    - docker manifest push ${REGISTRY}/$SERVICE:${APP_VERSION}
+    - docker manifest push ${REGISTRY}/$SERVICE:latest
+  parallel:
+    matrix:
+      - SERVICE: [__BUILD_SERVICES__]
+  rules:
+    - if: '$ISSUE_VERSION'
+      when: always
+
+deploy-stage-arm:
+  stage: deploy
+  before_script:
+    - ''
+  after_script:
+    - ''
+  image: dtzar/helm-kubectl
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context __GITLAB_GROUP__/__REPO__:__AGENT_STAGE__
+    - kubectl get pods
+    - APP_VERSION=`grep APP_VERSION .env | xargs`
+    - APP_VERSION=${APP_VERSION#*=}
+    - echo releasing version $APP_VERSION to stage
+    - helm list
+    - helm upgrade --install __PROJECT__-front-stage ./kubernetes/charts/stage/ --set app_version=${APP_VERSION}
+    - kubectl describe deploy | grep Image
+  manual_confirmation: 'You are deploying to Stage! Are you sure?'
+  rules:
+    - if: "$CI_COMMIT_TAG"
+      when: manual
+
+
+deploy-demo-arm:
+  stage: deploy
+  before_script:
+    - ''
+  after_script:
+    - ''
+  image: dtzar/helm-kubectl
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context __GITLAB_GROUP__/__REPO__:__AGENT_DEMO__
+    - kubectl get pods
+    - APP_VERSION=`grep APP_VERSION .env | xargs`
+    - APP_VERSION=${APP_VERSION#*=}
+    - echo releasing version $APP_VERSION to demo
+    - helm list
+    - helm upgrade --install __PROJECT__-front-demo ./kubernetes/charts/demo/ --set app_version=${APP_VERSION}
+    - kubectl describe deploy | grep Image
+  manual_confirmation: 'You are deploying to Demo! Are you sure?'
+  rules:
+    - if: "$CI_COMMIT_TAG"
+      when: manual
+
+
+deploy-prod-arm:
+  stage: deploy
+  before_script:
+    - ''
+  after_script:
+    - ''
+  image: dtzar/helm-kubectl
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context __GITLAB_GROUP__/__REPO__:__AGENT_PROD__
+    - kubectl get pods
+    - APP_VERSION=`grep APP_VERSION .env | xargs`
+    - APP_VERSION=${APP_VERSION#*=}
+    - echo releasing version $APP_VERSION to prod
+    - helm list
+    - helm upgrade --install __PROJECT__-front-prod ./kubernetes/charts/prod/ --set app_version=${APP_VERSION}
+    - kubectl describe deploy | grep Image
+  manual_confirmation: 'You are deploying to Prod! Are you sure?'
+  rules:
+    - if: "$CI_COMMIT_TAG"
+      when: manual

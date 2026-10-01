@@ -1,0 +1,72 @@
+{{- $service_secrets := .Values.secrets }}
+{{- $registry_link := .Values.sharedRegistry }}
+{{- range .Values.crons }}
+{{- if .need_secrets }}
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: {{ .name | replace "_" "-" }}-secrets
+  labels:
+    app: {{ .name | replace "_" "-" }}-secrets
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: __PROJECT__-secrets-store
+    kind: SecretStore
+  target:
+    name: {{ .name | replace "_" "-" }}-secrets
+    creationPolicy: Owner
+  data:
+  {{- range $service_secrets }}
+  - secretKey: {{ .name | quote }}
+    remoteRef:
+      key: {{ .key | quote }}
+      property: {{ .name | quote }}
+  {{- end }}
+---
+{{- end }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .name }}
+  labels:
+    app: {{ .name }}
+spec:
+  schedule: {{ .schedule | quote }}
+  successfulJobsHistoryLimit: 0
+  startingDeadlineSeconds: 60
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: {{ .name }}
+        spec:
+          serviceAccountName: __PROJECT__-secrets-service-account
+          containers:
+          - name: {{ .name }}
+            image: '{{ $registry_link }}/scheduler:latest'
+            imagePullPolicy: Always
+            command: ["sh", "-c", "{{ .command }}"]
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+              privileged: false
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            envFrom:
+            - configMapRef:
+                name: common-config
+            {{- if .need_secrets }}
+            - secretRef:
+                name: {{ .name | replace "_" "-" }}-secrets
+            {{- end }}
+            resources: {}
+          imagePullSecrets:
+          - name: regcred
+          restartPolicy: "Never"
+---
+{{- end}}

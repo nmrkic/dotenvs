@@ -1,0 +1,9 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: minio-config
+data:
+  MINIO_ROOT_USER: CHANGE_ME
+  MINIO_ROOT_PASSWORD: CHANGE_ME
+  MINIO_BROWSER_REDIRECT_URL: https://storage-console.__HOST__

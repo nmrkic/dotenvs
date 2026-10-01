@@ -1,0 +1,18 @@
+runners:
+  config: |
+    [[runners]]
+      limit = 2
+      [runners.kubernetes]
+        namespace="default"
+        image = "ubuntu:24.04"
+        privileged = true
+        helper_image = "registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:arm64-latest"
+        helper_cpu_limit = "250m"
+        helper_memory_limit = "500Mi"
+
+        [runners.kubernetes.node_selector]
+          "kubernetes.io/arch" = "arm64"
+      [[runners.kubernetes.volumes.empty_dir]]
+        name = "docker-certs"
+        mount_path = "/certs/client"
+        medium = "Memory"

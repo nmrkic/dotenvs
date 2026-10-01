@@ -1,0 +1,87 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: rest-api-secrets
+  labels:
+    app: rest-api-secrets
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: __PROJECT__-secrets-store
+    kind: SecretStore
+  target:
+    name: rest-api-secrets
+    creationPolicy: Owner
+  data:
+  {{- range .Values.secrets }}
+  - secretKey: {{ .name | quote }}
+    remoteRef:
+      key: {{ .key | quote }}
+      property: {{ .name | quote }}
+  {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rest-api
+  labels:
+    app: rest-api
+spec:
+  selector:
+    matchLabels:
+      app: rest-api
+  replicas: 1
+  revisionHistoryLimit: 0
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: rest-api
+    spec:
+      serviceAccountName: __PROJECT__-secrets-service-account
+      containers:
+      - image: '{{ .Values.registry }}/rest_api:{{ .Values.app_version }}'
+        name: rest-api
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        envFrom:
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: rest-api-secrets
+        ports:
+        - containerPort: 8080
+        resources: {}
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /__PROJECT__-api/health
+            port: 8080
+            scheme: HTTP
+      imagePullSecrets:
+      - name: regcred
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest-api
+  labels:
+    app: rest-api
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: rest-api

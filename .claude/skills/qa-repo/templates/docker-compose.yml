@@ -1,0 +1,131 @@
+# Shape reference only. The real file is derived from the project's own
+# docker-compose (see SKILL.md): same services, same infra, `build:` replaced
+# by the published image.
+networks:
+  project_network:
+    name: __PROJECT__-qa-net
+
+services:
+  # ---- frontend: own version, falls back to the backend one ----
+  frontend:
+    image: ${REGISTRY}/frontend:${FRONT_APP_VERSION:-$APP_VERSION}
+    container_name: frontend_${DOCKER_CONTAINER_SUFFIX}
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    networks:
+      project_network:
+        aliases:
+          - frontend
+
+  # ---- HTTP gateway ----
+  rest_api:
+    image: ${REGISTRY}/rest_api:${APP_VERSION}
+    container_name: rest_api_${DOCKER_CONTAINER_SUFFIX}
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    networks:
+      project_network:
+        aliases:
+          - rest_api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbit:
+        condition: service_healthy
+
+  # ---- one block like this per worker service ----
+  user:
+    image: ${REGISTRY}/user:${APP_VERSION}
+    container_name: user_${DOCKER_CONTAINER_SUFFIX}
+    env_file:
+      - .env
+    networks:
+      project_network:
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  # ---- run on demand: make run_scheduler method=... service=... ----
+  scheduler:
+    image: ${REGISTRY}/scheduler:${APP_VERSION}
+    container_name: scheduler_${DOCKER_CONTAINER_SUFFIX}
+    profiles: ["manual"]
+    command: "scheduler ${METHOD} ${SERVICE}"
+    env_file:
+      - .env
+    networks:
+      project_network:
+    depends_on:
+      rabbit:
+        condition: service_healthy
+
+  # ---- infra: copied from the project compose ----
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_${DOCKER_CONTAINER_SUFFIX}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init_db:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      project_network:
+        aliases:
+          - postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: redis_${DOCKER_CONTAINER_SUFFIX}
+    ports:
+      - "6379:6379"
+    networks:
+      project_network:
+        aliases:
+          - redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  rabbit:
+    image: rabbitmq:4.0.3-management
+    container_name: rabbit_${DOCKER_CONTAINER_SUFFIX}
+    env_file:
+      - .env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      project_network:
+        aliases:
+          - rabbit
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  postgres_data:
+    driver: local

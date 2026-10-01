@@ -1,0 +1,61 @@
+{{- $version := .Values.app_version }}
+{{- $registry_link := .Values.registry }}
+{{- range .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  labels:
+    app: {{ .name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  replicas: {{ .replicas }}
+  revisionHistoryLimit: 0
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+      - image: '{{ $registry_link }}/{{ .name }}:{{ $version }}'
+        name: {{ .name }}
+        securityContext:
+          runAsUser: 1001
+          runAsGroup: 1001
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: '{{ .name }}-config'
+        ports:
+        - containerPort: {{ .port }}
+        resources: {}
+      imagePullSecrets:
+      - name: regcred
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}
+  labels:
+    app: {{ .name }}
+spec:
+  ports:
+  - name: "{{ .port }}"
+    port: 80
+    targetPort: {{ .port }}
+    protocol: TCP
+  selector:
+    app: {{ .name }}
+---
+{{- end}}

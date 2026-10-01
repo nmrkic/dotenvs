@@ -1,0 +1,12 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: front-config
+data:
+  AUTH_TRUST_HOST: "true"
+  AUTH_SECRET: CHANGE_ME
+  AUTH_URL: https://__HOST__
+  NEXT_PUBLIC_ROOT_DOMAIN: https://__HOST__
+  BACKEND_API_ENDPOINT: https://__HOST__/__PROJECT__-api
+  NEXT_PUBLIC_BACKEND_API_ENDPOINT: https://__HOST__/__PROJECT__-api

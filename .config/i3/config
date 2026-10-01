@@ -61,14 +61,14 @@ smart_gaps on
 # Startup
 exec --no-startup-id dunst
 exec --no-startup-id xrdb -merge ~/.Xresources
-exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id sh -c '~/.screenlayout/auto-monitors.sh && ~/.config/polybar/launch.sh'
+exec --no-startup-id snixembed --fork
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xset s off -dpms
 exec --no-startup-id /usr/libexec/gsd-xsettings
 exec --no-startup-id nm-applet
-exec --no-startup-id sh -c 'for i in 1 2 3; do setxkbmap -layout us,rs(latin),rs -option grp:alt_shift_toggle; sleep 2; done'
+exec_always --no-startup-id setxkbmap -layout us,rs,rs -variant ,latin, -option '' -option grp:alt_shift_toggle
 exec --no-startup-id sh -c 'while true; do ~/.config/i3/scripts/layout-notify; sleep 1; done'
-exec --no-startup-id ~/.screenlayout/auto-monitors.sh
 exec --no-startup-id numlockx on
 exec --no-startup-id /usr/bin/picom
 exec_always --no-startup-id sleep 1 && feh --bg-fill /home/nebojsa/Pictures/dark-blue.jpg
@@ -143,9 +143,11 @@ for_window [instance="gnome-calculator"] floating enable
 # Reload / restart / exit / power
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec --no-startup-id bash -c '[ "$(echo -e "Da\nNe" | rofi -dmenu -p "Izlaz iz i3?")" = "Da" ] && i3-msg exit'
+bindsym $mod+Shift+e exec --no-startup-id ~/.config/i3/scripts/i3-confirm-power.sh exit
 bindsym $mod+Shift+p exec --no-startup-id ~/.config/i3/scripts/i3-confirm-power.sh poweroff
 bindsym $mod+Shift+b exec --no-startup-id ~/.config/i3/scripts/i3-confirm-power.sh reboot
+bindsym $mod+Shift+n exec --no-startup-id ~/.config/i3/scripts/toggle-notifications.sh
+bindsym $mod+Shift+x exec --no-startup-id i3lock -c 000000
 
 # Resize mode
 mode "resize" {

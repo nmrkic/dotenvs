@@ -1,0 +1,27 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: common-config
+data:
+  DEBUG: "false"
+  DEVELOP: "false"
+  API_ROOT: /__PROJECT__-api
+
+  REDIS_HOST: redis-service
+  REDIS_URL: redis://redis-service:6379/0
+
+  DB_TYPE: mysql+pymysql
+  DB_HOST: __DB_HOST__
+  DB_DATABASE: __PROJECT___production
+  DB_PORT: "3306"
+  DB_CERT_PATH: /mnt/secrets-store/__PROJECT__-production-mysql-cert.pem
+
+  ASSET_STORE: S3Files
+  ASSET_LOCATION: __PROJECT__-production-media-__AWS_ACCOUNT_ID__
+  ASSET_PUBLIC_URL: media.__HOST__
+  ASSET_TLS_ENABLED: "true"
+  ASSET_MEDIA_URL: https://media.__HOST__/media
+  ASSET_REGION: __AWS_REGION__
+
+  FRONTEND_DOMAIN: https://__HOST__

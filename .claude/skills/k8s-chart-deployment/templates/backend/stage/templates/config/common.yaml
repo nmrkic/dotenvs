@@ -1,0 +1,25 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: common-config
+data:
+  DEBUG: "true"
+  DEVELOP: "false"
+  API_ROOT: /__PROJECT__-api
+
+  REDIS_HOST: redis-service
+  REDIS_URL: redis://redis-service:6379/0
+
+  DB_TYPE: mysql+pymysql
+  DB_HOST: mysql-service
+  DB_DATABASE: __PROJECT__
+  DB_PORT: "3306"
+
+  ASSET_STORE: MinioFiles
+  ASSET_LOCATION: default
+  ASSET_PUBLIC_URL: storage.__HOST__
+  ASSET_TLS_ENABLED: "true"
+  ASSET_MEDIA_URL: https://storage.__HOST__/default/media
+
+  FRONTEND_DOMAIN: https://__HOST__

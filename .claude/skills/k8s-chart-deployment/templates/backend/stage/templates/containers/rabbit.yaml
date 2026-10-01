@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rabbit
+  name: rabbit
+spec:
+  selector:
+    matchLabels:
+      app: rabbit
+  replicas: 1
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      labels:
+        app: rabbit
+    spec:
+      containers:
+      - image: reg.bwl.rs/shared/rabbitmq:4.0.3-management
+        imagePullPolicy: "IfNotPresent"
+        name: rabbit
+        envFrom:
+        - configMapRef:
+            name: common-config
+        - configMapRef:
+            name: secret-config
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+        resources: {}
+      imagePullSecrets:
+      - name: regcred-shared
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rabbit-service
+  name: rabbit-service
+spec:
+  ports:
+  - name: "5672"
+    port: 5672
+    targetPort: 5672
+  - name: "15672"
+    port: 15672
+    targetPort: 15672
+  selector:
+    app: rabbit

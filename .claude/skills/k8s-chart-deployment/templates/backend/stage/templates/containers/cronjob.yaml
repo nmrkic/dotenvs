@@ -1,0 +1,44 @@
+{{- $registry_link := .Values.sharedRegistry }}
+{{- range .Values.crons }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .name }}
+  labels:
+    app: {{ .name }}
+spec:
+  schedule: {{ .schedule | quote }}
+  successfulJobsHistoryLimit: 0
+  startingDeadlineSeconds: 60
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: {{ .name }}
+        spec:
+          containers:
+          - name: {{ .name }}
+            image: '{{ $registry_link }}/scheduler:latest'
+            imagePullPolicy: Always
+            command: ["sh", "-c", "{{ .command }}"]
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+              privileged: false
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            envFrom:
+            - configMapRef:
+                name: common-config
+            - configMapRef:
+                name: secret-config
+            resources: {}
+          imagePullSecrets:
+          - name: regcred-shared
+          restartPolicy: "Never"
+---
+{{- end}}

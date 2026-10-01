@@ -1,6 +1,7 @@
 [global]
     monitor = 0
     follow = mouse
+    fullscreen = delay
     origin = top-right
     offset = 12x34
     scale = 0
@@ -45,16 +46,16 @@
     background = "#1e1e2e"
     foreground = "#cdd6f4"
     frame_color = "#585b70"
-    timeout = 4
+    timeout = 2
 
 [urgency_normal]
     background = "#1e1e2e"
     foreground = "#cdd6f4"
     frame_color = "#89b4fa"
-    timeout = 6
+    timeout = 2
 
 [urgency_critical]
     background = "#1e1e2e"
     foreground = "#f38ba8"
     frame_color = "#f38ba8"
-    timeout = 0
+    timeout = 2

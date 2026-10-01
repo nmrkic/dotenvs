@@ -1,0 +1,55 @@
+app_version: "0.0.1"
+
+registry: reg.bwl.rs/__PROJECT__
+
+sharedRegistry: reg.bwl.rs/shared
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+crons:
+  - name: example-daily-job
+    command: "/opt/app/config/run.sh example_task example_exchange"
+    schedule: "0 6 * * *"
+    need_secrets: true
+
+# One entry per env var pulled from AWS Secrets Manager.
+# name = env var name and JSON property inside the secret, key = secret id.
+secrets:
+  - name: RABBITMQ_HOST
+    key: production/__PROJECT__/secrets
+  - name: RABBITMQ_PORT
+    key: production/__PROJECT__/secrets
+  - name: RABBITMQ_USER
+    key: production/__PROJECT__/secrets
+  - name: RABBITMQ_PASSWORD
+    key: production/__PROJECT__/secrets
+  - name: RABBITMQ_VHOST
+    key: production/__PROJECT__/secrets
+  - name: RABBITMQ_DEFAULT_USER
+    key: production/__PROJECT__/secrets
+  - name: RABBITMQ_DEFAULT_PASS
+    key: production/__PROJECT__/secrets
+  - name: RABBITMQ_DEFAULT_VHOST
+    key: production/__PROJECT__/secrets
+  - name: RABBIT_URL
+    key: production/__PROJECT__/secrets
+  - name: DB_USERNAME
+    key: production/__PROJECT__/secrets
+  - name: DB_PASSWORD
+    key: production/__PROJECT__/secrets
+  - name: JWT_SECRET
+    key: production/__PROJECT__/secrets
+
+services:
+  - name: user
+    replicas: 1
+    need_secrets: true
+  - name: notify
+    replicas: 1
+    need_secrets: true
