@@ -68,10 +68,15 @@ Grupe `i3` i `claude-work` se linkuju samo kad se navedu, a ceo i3 desktop podi�
 
 ```sh
 ./install-mac.sh -n    # samo ispiše šta bi uradio
-./install-mac.sh       # brew: fish, tmux, Zed + linkovi + fish kao login shell
+./install-mac.sh       # fish, tmux, Zed + linkovi + fish kao login shell
 ```
 
-Traži da je Homebrew već instaliran. Linkuje `fish`, `tmux`, `zed` i
+Sa Homebrew-om instalira sve preko brew-a. Bez njega, i bez admin prava, tmux
+(sa statičkim libevent i utf8proc) i fish (preko rustup/cargo) kompajlira iz
+source-a u `~/.local/bin`, a izvorni kod ostaje u `~/.local/src`. Za to treba
+samo Xcode Command Line Tools (`xcode-select --install`). Zed se tada preskače.
+Ako korisnik nije u `admin` grupi, nema `chsh`, pa skripta na kraj `~/.zshrc`
+dodaje blok koji pokreće fish. Linkuje `fish`, `tmux`, `zed` i
 `claude-work`; ostalo se dodaje po želji (`./install.sh base`). Razlike u odnosu
 na Linux:
 

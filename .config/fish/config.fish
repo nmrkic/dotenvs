@@ -1,5 +1,7 @@
 # macOS (Apple Silicon): Homebrew mora u PATH pre nego što se traži tmux
 test -x /opt/homebrew/bin/brew; and eval (/opt/homebrew/bin/brew shellenv)
+# isto za tmux kompajliran u ~/.local (Mac bez brew-a, install-mac.sh)
+set PATH $PATH ~/.local/bin
 
 if status is-interactive
 	and not set -q TMUX
@@ -12,7 +14,6 @@ set -x GOPATH $HOME/projects/.go
 test -d /usr/lib/go; and set -x GOROOT /usr/lib/go
 set -x GOBIN $HOME/projects/.go/bin
 #set -x GOPATH /home/nebojsa/tools/golang_courses/workspace
-set PATH $PATH ~/.local/bin
 set PATH $PATH $GOPATH/bin
 set PATH $PATH /opt/nvim-linux-x86_64/bin/
 set PATH $PATH $HOME/.acme.sh
