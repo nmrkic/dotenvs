@@ -39,8 +39,13 @@ function fish_prompt --description 'Write out the prompt'
         set -g __fish_prompt_hostname (hostname|cut -d . -f 1)
     end
 
-    set kubenv (kubectl config current-context)
-    echo -n -s "(" $kubenv ")" " "
+    # kubectl context samo ako je kubectl instaliran i context je postavljen
+    if type -q kubectl
+        set -l kubenv (kubectl config current-context 2>/dev/null)
+        if test -n "$kubenv"
+            echo -n -s "(" $kubenv ")" " "
+        end
+    end
 
     if set -q VIRTUAL_ENV
         echo -n -s "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
