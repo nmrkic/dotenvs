@@ -15,7 +15,7 @@ test -d /usr/lib/go; and set -x GOROOT /usr/lib/go
 set -x GOBIN $HOME/projects/.go/bin
 #set -x GOPATH /home/nebojsa/tools/golang_courses/workspace
 set PATH $PATH $GOPATH/bin
-set PATH $PATH /opt/nvim-linux-x86_64/bin/
+test -d /opt/nvim-linux-x86_64/bin; and set PATH $PATH /opt/nvim-linux-x86_64/bin/
 set PATH $PATH $HOME/.acme.sh
 
 if test -f ~/.fish_secrets.fish; source ~/.fish_secrets.fish; end
@@ -82,24 +82,27 @@ alias d-u 'docker compose up -d'
 alias kc 'kubectl'
 alias kx 'kubectx'
 # -------------------------------------------------------------------
-# Headphone aliases
+# Linux desktop (bluetoothctl, xinput, i3), na Mac-u se preskače
 # -------------------------------------------------------------------
-alias WI-C100 'bluetoothctl connect 74:B7:E6:03:73:42'
-alias WI-C310 'bluetoothctl connect 90:7A:58:67:88:9D'
-alias One 'bluetoothctl connect 64:A2:F9:FE:FE:99'
-# ------------------------------------------------------------------
-# TouchPad
-# ------------------------------------------------------------------
-function touchpad_off
-    xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 209 0
+if test (uname -s) = Linux
+    # Headphone aliases
+    alias WI-C100 'bluetoothctl connect 74:B7:E6:03:73:42'
+    alias WI-C310 'bluetoothctl connect 90:7A:58:67:88:9D'
+    alias One 'bluetoothctl connect 64:A2:F9:FE:FE:99'
+
+    # TouchPad
+    function touchpad_off
+        xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 209 0
+    end
+    function touchpad_on
+        xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 209 1
+    end
+    alias fixmouse="xinput disable 18 && sleep 0.5 && xinput enable 18 && echo Mouse reset OK"
+
+    # i3 socket
+    set -l i3sock /run/user/(id -u)/i3/ipc-socket.*
+    set -q i3sock[1]; and set -x I3SOCK $i3sock[1]
 end
-function touchpad_on
-    xinput set-prop (xinput list | grep -i touchpad | grep -oP 'id=\K[0-9]+') 209 1
-end
-# ------------------------------------------------------------------
-# i3 socket
-# ------------------------------------------------------------------
-set -x I3SOCK (ls /run/user/1000/i3/ipc-socket.* 2>/dev/null | head -1)
 
 # ------------------------------------------------------------------
 # Claude AI
@@ -125,4 +128,3 @@ end
 # pnpm end
 
 set -x DOTNET_ROOT $HOME/.dotnet
-alias fixmouse="xinput disable 18 && sleep 0.5 && xinput enable 18 && echo Mouse reset OK"
