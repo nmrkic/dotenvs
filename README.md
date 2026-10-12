@@ -4,41 +4,38 @@ Moji dotfiles i konfiguracija za i3 desktop setup (Ubuntu, GDM3 kao display mana
 X11 sesija). Ovaj README opisuje šta treba instalirati i linkovati da bi sve radilo
 na novom sistemu.
 
-## 1. Paketi koje treba instalirati
+## 1. i3 desktop (paketi + GDM sesija)
+
+i3 ne ide na svaki računar, pa ima svoju skriptu, odvojenu od `install.sh`:
 
 ```sh
-sudo apt install \
-    i3 \
-    fish \
-    rofi \
-    polybar \
-    dunst \
-    picom \
-    feh \
-    conky-all \
-    dex \
-    network-manager-gnome \
-    numlockx \
-    flameshot \
-    brightnessctl \
-    pulseaudio-utils \
-    arandr \
-    x11-xserver-utils \
-    x11-xkb-utils \
-    gnome-settings-daemon
+./install-i3.sh -n    # samo ispiše šta bi uradio
+./install-i3.sh       # instalira i podesi
 ```
+
+Radi samo na Ubuntu/Debian (`apt`) i redom:
+
+1. instalira pakete koji fale: `i3 i3lock rofi polybar dunst picom feh conky-all
+   dex network-manager-gnome numlockx flameshot brightnessctl pulseaudio-utils
+   arandr x11-xserver-utils x11-xkb-utils gnome-settings-daemon`
+2. linkuje i3 grupu (isto što i `./install.sh i3`)
+3. kompajlira `layout-notify` iz izvora ako binarni fajl iz repoa ne može da se
+   pokrene na ovom sistemu (sekcija 6)
+4. upiše `/usr/share/xsessions/i3.desktop` sa `Exec=$HOME/.local/bin/i3-x11`
+   (sekcija 4)
+
+Može se pokretati više puta; `sudo` traži samo kad ima šta da instalira ili
+upiše. Lista paketa se menja u nizu `PACKAGES` na vrhu skripte.
 
 Napomene:
 - `gnome-settings-daemon` daje `/usr/libexec/gsd-xsettings` (font/theme/cursor
   settings za GTK app-ove pod i3).
 - `dex` pokreće `.desktop` autostart entries (`exec --no-startup-id dex --autostart
   --environment i3` u i3 config-u).
-- Za fish shell plugin manager (**fisher**) instalacija ide kroz fish samog, ne apt:
-  ```fish
-  curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
-  fisher update   # povuče sve iz fish_plugins
-  ```
-- Postaviti fish kao login shell: `chsh -s /usr/bin/fish`
+- Ručno ostaje: `snixembed` (nije u apt-u), pozadina `~/Pictures/dark-blue.jpg`,
+  Chrome wrapper (sekcija 4) i monitor layout (sekcija 5).
+- fish se instalira sa `./install.sh --install-fish` (sekcija 2); fisher je već
+  u repou (`.config/fish/functions/fisher.fish`).
 
 ## 2. Symlink-ovanje
 
@@ -55,14 +52,16 @@ linkuje ka mestu na kom se sama nalazi):
 git clone <repo-url> ~/tools/dotenvs
 cd ~/tools/dotenvs
 ./install.sh -n           # samo ispiše šta bi uradio
-./install.sh              # sve grupe za ovaj OS
+./install.sh              # base, fish, zed, claude
 ./install.sh zed claude   # samo navedene grupe
-./install.sh --install-fish   # sve + instalira fish i postavi ga kao login shell
+./install.sh --install-fish   # isto + instalira fish i postavi ga kao login shell
 ```
 
 Grupe su `base` (vim, tmux, tmate, git), `fish`, `i3` (i3, rofi, picom, polybar,
-dunst, conky, `.screenlayout`, i3-x11 wrapper), `zed` i `claude`. Na Linuxu se
-podrazumevano linkuju sve, na macOS-u samo `base`, `zed` i `claude`.
+dunst, conky, `.screenlayout`, i3-x11 wrapper), `zed` i `claude`. Podrazumevano
+se linkuju `base`, `fish`, `zed` i `claude` (na macOS-u bez `fish`). Grupa `i3`
+se linkuje samo kad se navede, a ceo i3 desktop podiže `install-i3.sh`
+(sekcija 1).
 
 Skripta se može pokretati više puta: ispravan link preskače (`ok`), a ako na
 ciljnoj lokaciji već postoji nešto drugo, prvo ga premesti u
@@ -78,12 +77,13 @@ u odgovarajuću grupu u `install.sh` i red u tabelu u sekciji 3.
 
 **Za AI agenta:** na novom računaru pokreni `./install.sh -n`, pokaži izlaz, pa
 `./install.sh`. Ne pravi linkove ručno i ne briši `.bak-*` fajlove bez pitanja.
-Pakete (sekcija 1) i `system/` fajlove (sekcija 4) instaliraj samo ako se to
-izričito traži, jer zahtevaju `sudo`.
+`./install.sh --install-fish` i `./install-i3.sh` pokreći samo ako se to
+izričito traži, jer instaliraju pakete i zahtevaju `sudo`.
 
 Fajlovi ispod `system/` u ovom repou **nisu** symlink-ovani (žive van `$HOME`,
 vlasnik je `root`) — to su samo referentni snapshot-ovi za sistemske fajlove;
-instaliraju se ručno, vidi sekciju 4.
+`i3.desktop` instalira `install-i3.sh`, Chrome wrapper se instalira ručno, vidi
+sekciju 4.
 
 ## 3. Šta je gde (mapa)
 
@@ -128,11 +128,8 @@ fixa:
    ```
    Original (pre izmene) je u paketu i zove se `i3` — GDM ga instalira ponovo
    pri svakom update-u i3 paketa, pa **ovaj korak treba ponoviti na svakom
-   novom sistemu**:
-   ```sh
-   sudo install -m 644 ~/tools/dotenvs/system/usr/share/xsessions/i3.desktop \
-       /usr/share/xsessions/i3.desktop
-   ```
+   novom sistemu** (i posle update-a i3 paketa). To radi `./install-i3.sh`,
+   koji u `Exec` upiše `$HOME` trenutnog korisnika umesto `/home/nebojsa`.
 
 2. **GPU/WebRTC flagovi za Chrome** — `/usr/local/bin/google-chrome` je custom
    wrapper koji se poziva umesto `/usr/bin/google-chrome-stable`:

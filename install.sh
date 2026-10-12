@@ -12,8 +12,9 @@
 #                             ga postavi kao login shell (traži sudo/lozinku)
 #
 # Grupe: base fish i3 zed claude
-# Na Linuxu se podrazumevano linkuju sve, na macOS-u samo base, zed i claude
-# (fish i i3 config su pisani za Linux desktop).
+# Podrazumevano se linkuju base, fish, zed i claude (na macOS-u bez fish, jer
+# je taj config pisan za Linux). Grupa i3 se linkuje samo kad se izričito
+# navede; ceo i3 desktop (paketi + linkovi + GDM) podiže ./install-i3.sh.
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -139,7 +140,7 @@ for arg in "$@"; do
     case "$arg" in
         -n|--dry-run) DRY_RUN=1 ;;
         --install-fish) INSTALL_FISH=1 ;;
-        -h|--help) sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        -h|--help) sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
         base|fish|i3|zed|claude) groups+=("$arg") ;;
         *) echo "Nepoznat argument: $arg (grupe: base fish i3 zed claude)" >&2; exit 1 ;;
     esac
@@ -147,7 +148,7 @@ done
 
 if [ "${#groups[@]}" -eq 0 ]; then
     if [ "$(uname -s)" = "Linux" ]; then
-        groups=(base fish i3 zed claude)
+        groups=(base fish zed claude)
     else
         groups=(base zed claude)
     fi
@@ -171,8 +172,8 @@ if [ "$INSTALL_FISH" -eq 1 ]; then default_shell_fish; fi
 
 cat <<EOF
 
-Gotovo. Skripta ne radi ono što traži sudo ili instalaciju, vidi README.md:
-  - paketi (sekcija 1); fish i login shell samo uz --install-fish
-  - system/ fajlovi za GDM i Chrome (sekcija 4)
+Gotovo. Šta ova skripta ne radi:
+  - fish instalacija i login shell: ./install.sh --install-fish
+  - i3 desktop (paketi, linkovi, GDM sesija): ./install-i3.sh
   - 'claude' login pre korišćenja Claude Code-a (sekcija 7)
 EOF
