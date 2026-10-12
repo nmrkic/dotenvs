@@ -1,8 +1,8 @@
 app_version: "0.0.1"
 
-registry: reg.bwl.rs/__PROJECT__
+registry: __REGISTRY_HOST__/__PROJECT__
 
-sharedRegistry: reg.bwl.rs/shared
+sharedRegistry: __REGISTRY_HOST__/shared
 
 replicaCount: 1
 

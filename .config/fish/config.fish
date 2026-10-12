@@ -98,6 +98,7 @@ set -x I3SOCK (ls /run/user/1000/i3/ipc-socket.* 2>/dev/null | head -1)
 # Claude AI
 # ------------------------------------------------------------------
 alias cc='claude'
+alias ccw='CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'
 
 
 # ------------------------------------------------------------------

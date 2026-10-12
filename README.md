@@ -48,50 +48,38 @@ Roditeljski direktorijumi (`.config/i3`, `.config/rofi`...) su obični direktori
 ne symlink-ovi — tako generisani/cache fajlovi koje alati prave pored config-a ne
 ulaze u git.
 
-Setup skripta (pokreni sa novog checkout-a, iz `~/tools/dotenvs`):
+Sve linkove pravi `install.sh` (repo može biti kloniran bilo gde, skripta
+linkuje ka mestu na kom se sama nalazi):
 
 ```sh
-REPO="$HOME/tools/dotenvs"
-
-# top-level dotfiles
-ln -sf "$REPO/.conkyrc"      ~/.conkyrc
-ln -sf "$REPO/.vimrc"        ~/.vimrc
-ln -sf "$REPO/.Xresources"   ~/.Xresources
-ln -sf "$REPO/.tmux.conf"    ~/.tmux.conf
-ln -sf "$REPO/.tmate.conf"   ~/.tmate.conf
-
-# fish (ceo direktorijum, fish sam piše fish_variables/completions unutra)
-ln -sfn "$REPO/.config/fish" ~/.config/fish
-
-# i3
-mkdir -p ~/.config/i3
-ln -sf  "$REPO/.config/i3/config"  ~/.config/i3/config
-ln -sfn "$REPO/.config/i3/scripts" ~/.config/i3/scripts
-
-# rofi / picom / polybar / dunst
-mkdir -p ~/.config/rofi ~/.config/picom ~/.config/polybar ~/.config/dunst
-ln -sf  "$REPO/.config/rofi/config.rasi"    ~/.config/rofi/config.rasi
-ln -sf  "$REPO/.config/picom/picom.conf"    ~/.config/picom/picom.conf
-ln -sf  "$REPO/.config/polybar/config.ini"  ~/.config/polybar/config.ini
-ln -sf  "$REPO/.config/polybar/launch.sh"   ~/.config/polybar/launch.sh
-ln -sfn "$REPO/.config/polybar/scripts"     ~/.config/polybar/scripts
-ln -sf  "$REPO/.config/dunst/dunstrc"       ~/.config/dunst/dunstrc
-
-# arandr monitor layout skripte
-ln -sfn "$REPO/.screenlayout" ~/.screenlayout
-
-# i3-x11 wrapper (forsira X11 sesiju, vidi sekciju 4)
-mkdir -p ~/.local/bin ~/.local/share/xsessions
-ln -sf "$REPO/.local/bin/i3-x11"              ~/.local/bin/i3-x11
-ln -sf "$REPO/.local/share/xsessions/i3.desktop" ~/.local/share/xsessions/i3.desktop
-
-# Claude Code (vidi sekciju 7)
-mkdir -p ~/.claude
-ln -sf  "$REPO/.claude/settings.json" ~/.claude/settings.json
-ln -sfn "$REPO/.claude/commands"      ~/.claude/commands
-# ako ~/.claude/skills već postoji kao direktorijum, prvo ga premesti/obriši
-ln -sfn "$REPO/.claude/skills"        ~/.claude/skills
+git clone <repo-url> ~/tools/dotenvs
+cd ~/tools/dotenvs
+./install.sh -n           # samo ispiše šta bi uradio
+./install.sh              # sve grupe za ovaj OS
+./install.sh zed claude   # samo navedene grupe
+./install.sh --install-fish   # sve + instalira fish i postavi ga kao login shell
 ```
+
+Grupe su `base` (vim, tmux, tmate, git), `fish`, `i3` (i3, rofi, picom, polybar,
+dunst, conky, `.screenlayout`, i3-x11 wrapper), `zed` i `claude`. Na Linuxu se
+podrazumevano linkuju sve, na macOS-u samo `base`, `zed` i `claude`.
+
+Skripta se može pokretati više puta: ispravan link preskače (`ok`), a ako na
+ciljnoj lokaciji već postoji nešto drugo, prvo ga premesti u
+`<ime>.bak-<datum>` pa tek onda linkuje. Ništa ne briše i ne koristi `sudo`.
+
+`--install-fish` je jedini deo koji traži lozinku: ako fish nije instaliran,
+instalira ga preko `apt`/`dnf`/`pacman`/`brew`, linkuje fish config i na kraju
+uradi `chsh` (po potrebi prvo upiše fish u `/etc/shells`). Ako je fish već
+instaliran i već je login shell, ne radi ništa.
+
+Kad se u repo doda nov fajl koji treba linkovati, dodaje se jedna `link` linija
+u odgovarajuću grupu u `install.sh` i red u tabelu u sekciji 3.
+
+**Za AI agenta:** na novom računaru pokreni `./install.sh -n`, pokaži izlaz, pa
+`./install.sh`. Ne pravi linkove ručno i ne briši `.bak-*` fajlove bez pitanja.
+Pakete (sekcija 1) i `system/` fajlove (sekcija 4) instaliraj samo ako se to
+izričito traži, jer zahtevaju `sudo`.
 
 Fajlovi ispod `system/` u ovom repou **nisu** symlink-ovani (žive van `$HOME`,
 vlasnik je `root`) — to su samo referentni snapshot-ovi za sistemske fajlove;
@@ -102,18 +90,19 @@ instaliraju se ručno, vidi sekciju 4.
 | U repou | Symlink na | Šta radi |
 |---|---|---|
 | `.config/i3/config` | `~/.config/i3/config` | glavni i3 config |
-| `.config/i3/scripts/` | `~/.config/i3/scripts` | `layout-notify` (najava promene keyboard layout-a u dunst-u) i `i3-confirm-power.sh` (potvrda gašenja/restarta) |
+| `.config/i3/scripts/` | `~/.config/i3/scripts` | `layout-notify` (najava promene keyboard layout-a u dunst-u), `keyboard-layout.sh` (postavlja layout-e i vraća ih kad USB switch ponovo priključi tastaturu) i `i3-confirm-power.sh` (potvrda gašenja/restarta) |
 | `.config/fish/` | `~/.config/fish` | fish config, funkcije, `fish_plugins` (fisher) |
 | `.config/rofi/config.rasi` | `~/.config/rofi/config.rasi` | rofi tema/layout |
 | `.config/polybar/` | `~/.config/polybar/*` | polybar bar config + `launch.sh` + scripts (npr. `eth-ip.sh`) |
 | `.config/dunst/dunstrc` | `~/.config/dunst/dunstrc` | izgled/tajmauti notifikacija |
 | `.config/picom/picom.conf` | `~/.config/picom/picom.conf` | compositor (transparentnost, senke) |
+| `.config/zed/settings.json`, `keymap.json` | `~/.config/zed/*` | Zed podešavanja i prečice; agent "Claude Work" ima upisanu putanju `/home/nebojsa/.claude-work` |
 | `.screenlayout/*.sh` | `~/.screenlayout/*.sh` | arandr layout skripte (vidi sekciju 5) |
 | `.local/bin/i3-x11` | `~/.local/bin/i3-x11` | wrapper koji forsira X11 sesiju pre `exec i3` |
 | `.local/share/xsessions/i3.desktop` | `~/.local/share/xsessions/i3.desktop` | user-level xsession entry (vidi sekciju 4 — GDM ovaj *ne* čita pre login-a, ostavljen za slučaj drugog display managera) |
 | `system/usr/share/xsessions/i3.desktop` | *(ručno kopirati, sudo)* | **stvarni** xsession entry koji GDM koristi |
 | `system/usr/local/bin/google-chrome` | *(ručno kopirati, sudo)* | wrapper sa GPU/WebRTC flag-ovima za Chrome |
-| `.conkyrc`, `.vimrc`, `.Xresources`, `.tmux.conf`, `.tmate.conf` | `~/...` | standardni dotfile-ovi |
+| `.conkyrc`, `.conky/`, `.vimrc`, `.Xresources`, `.tmux.conf`, `.tmate.conf`, `.gitconfig` | `~/...` | standardni dotfile-ovi |
 | `.claude/skills/` | `~/.claude/skills` | globalni Claude Code skill-ovi (ceo direktorijum) |
 | `.claude/commands/` | `~/.claude/commands` | globalne slash komande |
 | `.claude/settings.json` | `~/.claude/settings.json` | Claude Code podešavanja (permissions, tema) |

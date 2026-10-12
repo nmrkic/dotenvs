@@ -106,8 +106,12 @@ agent authorised for this project.
    it in its own style instead of replacing it.
 2. Copy the matching template to `.gitlab-ci.yml` and fill the placeholders.
    Every `parallel.matrix` in the file gets the same build list.
-3. Write `docker-bake.hcl` with one target pair per service in that list, and
-   put every target in the `default` group.
+3. Write `docker-bake.hcl` with the `docker-bake` skill: it has the current
+   layout (multi-arch target per service in the `default` group, the
+   `<service>-amd64` / `<service>-arm64` pair this pipeline calls kept out of
+   it, registry in `docker-bake.override.hcl`). The `*.docker-bake.hcl`
+   templates here only show the per-arch pair. The pipeline passes the
+   registry as `REGISTRY=$HARBOR_HOST/$HARBOR_PROJECT`.
 4. Keep only the deploy jobs for environments that exist; delete the others.
 5. Single repo with no paired frontend/backend: remove the `curl` trigger line
    and `TRIGGER_URL_*` from `branch-version`, and remove the three `build-api-*`

@@ -1,0 +1,81 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore"
+    },
+  },
+  {
+    "context": "(Editor && edit_prediction)",
+    "bindings": {
+      "alt-l": null,
+    },
+  },
+  {
+    "context": "(Editor && (edit_prediction && (showing_completions || in_leading_whitespace)))",
+    "bindings": {
+      "alt-l": null,
+    },
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-l": null,
+    },
+  },
+  {
+    "context": "((FileFinder || FileFinder > Picker > Editor) || FileFinder > Picker > menu)",
+    "bindings": {
+      "ctrl-l": null,
+    },
+  },
+  {
+    "context": "(Editor && mode == full)",
+    "bindings": {
+      "alt-enter": null,
+    },
+  },
+  {
+    "context": "(Editor && mode == full)",
+    "bindings": {
+      "ctrl-l": "agent::AddSelectionToThread",
+    },
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-l": "agent::AddSelectionToThread",
+    },
+  },
+  {
+    "context": "AgentPanel",
+    "bindings": {
+      "ctrl-l": "agent::AddSelectionToThread",
+    },
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl->": null,
+    },
+  },
+  {
+    "context": "AgentPanel",
+    "bindings": {
+      "ctrl->": null,
+    },
+  },
+  {
+    "context": "(Editor && mode == full)",
+    "bindings": {
+      "ctrl->": null,
+    },
+  },
+]

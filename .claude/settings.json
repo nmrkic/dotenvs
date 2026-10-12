@@ -1,9 +1,9 @@
 {
   "permissions": {
     "allow": [
-        "Bash(git diff:*)",
-	"Bash(git status:*)",
-	"Bash(git log:*)"
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)"
     ],
     "deny": [
       "Bash(docker run *)",
@@ -52,7 +52,13 @@
       "Bash(git submodule *)"
     ]
   },
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
   "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true

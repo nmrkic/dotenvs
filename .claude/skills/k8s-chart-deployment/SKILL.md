@@ -49,6 +49,7 @@ Placeholders to replace after copying:
 |---|---|---|
 | `__PROJECT__` | short project slug, also the registry project and API prefix | `bzr` |
 | `__ENV__` | `stage`, `demo` or `prod` | `stage` |
+| `__REGISTRY_HOST__` | host of the image registry; ask the user, do not guess | `harbor.example.com` |
 | `__HOST__` | public host of that environment | `bzr.bwl.rs` |
 | `__NODE__` | node hostname that holds hostPath volumes (stage/demo) | `bzr` |
 | `__DB_HOST__`, `__AWS_ACCOUNT_ID__`, `__AWS_REGION__`, `__ACM_CERT_ARN__`, `__EXTERNAL_SECRETS_ROLE_ARN__` | prod AWS values | ask the user |
@@ -96,7 +97,8 @@ agent names), ask the user instead of guessing.
 - `app_version` is the image tag; CI overrides it with
   `--set app_version=${APP_VERSION}`. Images are
   `{{ registry }}/{{ imageName | default name }}:{{ app_version }}`.
-- `registry` is `reg.bwl.rs/<project>`, `sharedRegistry` is `reg.bwl.rs/shared`
+- `registry` is `<registry host>/<project>`, `sharedRegistry` is
+  `<registry host>/shared`
   (third-party images and the `scheduler` cron image).
 - `services` is a list of `name`, `replicas` and optional `imageName`,
   `command` (frontend adds `port`; prod backend adds `need_secrets`).

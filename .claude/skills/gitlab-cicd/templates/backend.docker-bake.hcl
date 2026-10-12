@@ -2,6 +2,12 @@ variable "APP_VERSION" {
     default = "latest"
 }
 
+# Set in docker-bake.override.hcl or passed by the pipeline (see the
+# docker-bake skill).
+variable "REGISTRY" {
+    default = "registry.example.com/project"
+}
+
 group "default" {
     targets = [
         "__SERVICE__-amd64",
@@ -19,7 +25,7 @@ target "__SERVICE__-amd64" {
     dockerfile = "__SERVICE__/Dockerfile"
     platforms = ["linux/amd64"]
     tags = [
-        "reg.bwl.rs/__PROJECT__/__SERVICE__:latest-amd64"
+        "${REGISTRY}/__SERVICE__:latest-amd64"
     ]
     push = true
 }
@@ -29,7 +35,7 @@ target "__SERVICE__-arm64" {
     dockerfile = "__SERVICE__/Dockerfile"
     platforms = ["linux/arm64"]
     tags = [
-        "reg.bwl.rs/__PROJECT__/__SERVICE__:latest-arm64"
+        "${REGISTRY}/__SERVICE__:latest-arm64"
     ]
     push = true
 }

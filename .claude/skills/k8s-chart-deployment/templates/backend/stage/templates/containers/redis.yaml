@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: reg.bwl.rs/shared/redis:7.4.2
+          image: {{ $.Values.sharedRegistry }}/redis:7.4.2
           imagePullPolicy: "IfNotPresent"
           command:
             - redis-server

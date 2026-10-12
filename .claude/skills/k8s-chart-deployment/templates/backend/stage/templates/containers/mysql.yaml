@@ -53,7 +53,7 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: reg.bwl.rs/shared/mysql:8.0.29
+      - image: {{ $.Values.sharedRegistry }}/mysql:8.0.29
         name: mysql
         envFrom:
         - configMapRef:

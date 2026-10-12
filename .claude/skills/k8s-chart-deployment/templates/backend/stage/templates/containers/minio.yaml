@@ -50,7 +50,7 @@ spec:
     spec:
       containers:
       - name: minio
-        image: 'reg.bwl.rs/shared/minio:RELEASE.2024-04-18T19-09-19Z'
+        image: '{{ $.Values.sharedRegistry }}/minio:RELEASE.2024-04-18T19-09-19Z'
         imagePullPolicy: "IfNotPresent"
         command:
         - /bin/bash

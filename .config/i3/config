@@ -67,7 +67,8 @@ exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xset s off -dpms
 exec --no-startup-id /usr/libexec/gsd-xsettings
 exec --no-startup-id nm-applet
-exec_always --no-startup-id setxkbmap -layout us,rs,rs -variant ,latin, -option '' -option grp:alt_shift_toggle
+exec_always --no-startup-id ~/.config/i3/scripts/keyboard-layout.sh
+exec --no-startup-id ~/.config/i3/scripts/keyboard-layout.sh watch
 exec --no-startup-id sh -c 'while true; do ~/.config/i3/scripts/layout-notify; sleep 1; done'
 exec --no-startup-id numlockx on
 exec --no-startup-id /usr/bin/picom

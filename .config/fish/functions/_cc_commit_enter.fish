@@ -1,5 +1,5 @@
 function _cc_commit_enter --description 'Enter: "cc-commit" is replaced with a git commit command (not run); anything else runs as usual'
-    if test (string trim -- (commandline)) = cc-commit
+    if test "$(commandline | string trim)" = cc-commit
         # repaint is queued until this function returns, so draw the
         # waiting line straight to the terminal while Claude runs
         printf '\r\e[2K> working...' >/dev/tty

@@ -16,7 +16,7 @@ spec:
         app: rabbit
     spec:
       containers:
-      - image: reg.bwl.rs/shared/rabbitmq:4.0.3-management
+      - image: {{ $.Values.sharedRegistry }}/rabbitmq:4.0.3-management
         imagePullPolicy: "IfNotPresent"
         name: rabbit
         envFrom:
