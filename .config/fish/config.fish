@@ -1,12 +1,16 @@
+# macOS (Apple Silicon): Homebrew mora u PATH pre nego što se traži tmux
+test -x /opt/homebrew/bin/brew; and eval (/opt/homebrew/bin/brew shellenv)
+
 if status is-interactive
 	and not set -q TMUX
 	and not set -q SSH_TTY
+	and type -q tmux
 	    test $TERM != "screen"; and exec tmux
 end
-set -x VIRTUALFISH_HOME /home/nebojsa/projects/.virtualenvs
-set -x GOPATH /home/nebojsa/projects/.go
-set -x GOROOT /usr/lib/go
-set -x GOBIN /home/nebojsa/projects/.go/bin
+set -x VIRTUALFISH_HOME $HOME/projects/.virtualenvs
+set -x GOPATH $HOME/projects/.go
+test -d /usr/lib/go; and set -x GOROOT /usr/lib/go
+set -x GOBIN $HOME/projects/.go/bin
 #set -x GOPATH /home/nebojsa/tools/golang_courses/workspace
 set PATH $PATH ~/.local/bin
 set PATH $PATH $GOPATH/bin
@@ -21,8 +25,10 @@ if test -f ~/.fish_secrets.fish; source ~/.fish_secrets.fish; end
 
 set -gx PYENV_ROOT $HOME/.pyenv
 set -gx PATH $PYENV_ROOT/bin $PATH
-status --is-interactive; and source (pyenv init --path | psub)
-status --is-interactive; and source (pyenv init - | psub)
+if status --is-interactive; and type -q pyenv
+    source (pyenv init --path | psub)
+    source (pyenv init - | psub)
+end
 
 # -------------------------------------------------------------------
 # directory information
@@ -111,7 +117,7 @@ complete -c claude --wraps claude
 
 
 # pnpm
-set -gx PNPM_HOME "/home/nebojsa/.local/share/pnpm"
+set -gx PNPM_HOME "$HOME/.local/share/pnpm"
 if not string match -q -- $PNPM_HOME $PATH
   set -gx PATH "$PNPM_HOME" $PATH
 end

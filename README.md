@@ -57,11 +57,35 @@ cd ~/tools/dotenvs
 ./install.sh --install-fish   # isto + instalira fish i postavi ga kao login shell
 ```
 
-Grupe su `base` (vim, tmux, tmate, git), `fish`, `i3` (i3, rofi, picom, polybar,
-dunst, conky, `.screenlayout`, i3-x11 wrapper), `zed` i `claude`. Podrazumevano
-se linkuju `base`, `fish`, `zed` i `claude` (na macOS-u bez `fish`). Grupa `i3`
-se linkuje samo kad se navede, a ceo i3 desktop podiže `install-i3.sh`
-(sekcija 1).
+Grupe su `base` (vim, tmux, tmate, git), `tmux` (samo `.tmux.conf`), `fish`,
+`i3` (i3, rofi, picom, polybar, dunst, conky, `.screenlayout`, i3-x11 wrapper),
+`zed`, `claude` i `claude-work` (isti Claude config, ali u `~/.claude-work`).
+Podrazumevano se linkuju `base`, `fish`, `zed` i `claude`.
+Grupe `i3` i `claude-work` se linkuju samo kad se navedu, a ceo i3 desktop podiže
+`install-i3.sh` (sekcija 1).
+
+### macOS
+
+```sh
+./install-mac.sh -n    # samo ispiše šta bi uradio
+./install-mac.sh       # brew: fish, tmux, Zed + linkovi + fish kao login shell
+```
+
+Traži da je Homebrew već instaliran. Linkuje `fish`, `tmux`, `zed` i
+`claude-work`; ostalo se dodaje po želji (`./install.sh base`). Razlike u odnosu
+na Linux:
+
+- Claude Code se podešava samo za poslovni nalog: skills, komande i
+  `settings.json` se linkuju u `~/.claude-work`, a `~/.claude` se ne dira.
+  Pokreće se sa `ccw` (alias u `config.fish`), u Zed-u kao agent "Claude Work".
+
+- fish se linkuje fajl po fajl (`config.fish`, `functions/`, `fish_plugins`), bez
+  `conf.d/` i `fish_variables`, koji su vezani za Linux računar.
+- `config.fish` i `.tmux.conf` su pisani da rade na oba sistema (`$HOME` umesto
+  `/home/nebojsa`, `pbcopy` umesto `xclip`, pyenv/tmux/Homebrew samo ako postoje).
+- `.gitconfig` (grupa `base`) traži `git-delta` i GPG ključ za potpisivanje
+  commit-ova, pa ga na Mac-u linkuj tek kad to dvoje postoji.
+- `mac/.yabairc`, `mac/.skhdrc` i `mac/sublime/` se ne linkuju automatski.
 
 Skripta se može pokretati više puta: ispravan link preskače (`ok`), a ako na
 ciljnoj lokaciji već postoji nešto drugo, prvo ga premesti u
@@ -96,7 +120,7 @@ sekciju 4.
 | `.config/polybar/` | `~/.config/polybar/*` | polybar bar config + `launch.sh` + scripts (npr. `eth-ip.sh`) |
 | `.config/dunst/dunstrc` | `~/.config/dunst/dunstrc` | izgled/tajmauti notifikacija |
 | `.config/picom/picom.conf` | `~/.config/picom/picom.conf` | compositor (transparentnost, senke) |
-| `.config/zed/settings.json`, `keymap.json` | `~/.config/zed/*` | Zed podešavanja i prečice; agent "Claude Work" ima upisanu putanju `/home/nebojsa/.claude-work` |
+| `.config/zed/settings.json`, `keymap.json` | `~/.config/zed/*` | Zed podešavanja i prečice; agent "Claude Work" se pokreće kroz `sh -c` da bi `$HOME/.claude-work` važio na svakom računaru |
 | `.screenlayout/*.sh` | `~/.screenlayout/*.sh` | arandr layout skripte (vidi sekciju 5) |
 | `.local/bin/i3-x11` | `~/.local/bin/i3-x11` | wrapper koji forsira X11 sesiju pre `exec i3` |
 | `.local/share/xsessions/i3.desktop` | `~/.local/share/xsessions/i3.desktop` | user-level xsession entry (vidi sekciju 4 — GDM ovaj *ne* čita pre login-a, ostavljen za slučaj drugog display managera) |
