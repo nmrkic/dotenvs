@@ -267,6 +267,16 @@ Left to do by hand:
   - in Zed pick the "Claude Work" agent; "Claude Personal" stays in the list
     because settings.json is shared, but it doesn't work without a login in ~/.claude
   - AeroSpace: start it once and give it Accessibility (Privacy & Security)
+  - keyboard, so the AeroSpace shortcuts (alt = Start key) work like i3:
+      System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys: pick the
+      external keyboard and swap Command ⌘ and Option ⌥ (skip this if Karabiner
+      is installed, its first rule already does the swap)
+      System Settings → Keyboard → Keyboard Shortcuts → Spotlight: move
+      "Show Spotlight search" to ⌥Space
   - yabai/skhd: the config is in mac/, but it is neither installed nor linked.
     yabai needs SIP disabled to work fully; AeroSpace (mac/.aerospace.toml) replaces it
+  - Karabiner-Elements: deliberately not installed for now. mac/karabiner/ holds
+    Linux-style shortcuts (Ctrl+C/V -> ⌘C/V outside terminals, Ctrl+Shift+C/V in
+    terminals, Ctrl+arrows, Home/End); revisit only if the native ⌘ shortcuts
+    don't stick. It needs admin and approving a driver (system extension).
 MSG

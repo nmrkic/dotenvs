@@ -106,6 +106,14 @@ Differences from Linux:
 - `mac/.yabairc` and `mac/.skhdrc` are neither installed nor linked: yabai needs
   SIP disabled to work fully, which isn't an option on a work Mac, so AeroSpace
   replaces it. `mac/sublime/` isn't linked either.
+- Karabiner-Elements (`mac/karabiner/karabiner.json`) is deliberately **not**
+  installed or linked for now: the plan is to get used to the native macOS ⌘
+  shortcuts first. The config is kept in case that doesn't work out; it swaps ⌘/⌥
+  on the external keyboard, maps Ctrl+Shift+C/V/X to copy/paste/cut in terminals,
+  and outside terminals maps Ctrl+letter to ⌘, Ctrl+arrows to word jumps and
+  Home/End to line start/end. Installing it needs admin and approving its driver
+  (system extension). Without it, the ⌘/⌥ swap for AeroSpace is done by hand in
+  System Settings → Keyboard → Modifier Keys.
 
 The script can be run repeatedly: a correct link is skipped (`ok`), and if
 something else already exists at the target, it is first moved to

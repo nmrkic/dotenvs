@@ -23,4 +23,5 @@ palette = 14=#33c7de
 palette = 15=#ffffff
 
 font-family = Ubuntu Sans Mono
-font-size = 11
+# Ghostty's macOS default; 11 (the GNOME size) is too small on a Mac screen
+font-size = 13
