@@ -1,0 +1,122 @@
+# AeroSpace config, prečice prepisane iz .config/i3/config.
+# Linux $mod (Super) je ovde alt (⌥). U Keyboard → Modifier Keys su za
+# eksternu tastaturu zamenjeni ⌘ i ⌥, pa je ⌥ na start dugmetu kao na Linuxu,
+# a ⌘V/⌘S/⌘W... ostaju na fizičkom alt dugmetu.
+# Spotlight prebaciti na ⌥Space (Keyboard Shortcuts → Spotlight).
+# Link: ln -s ~/tools/dotenvs/mac/.aerospace.toml ~/.aerospace.toml
+
+start-at-login = true
+
+# bez ovoga 'split' ne radi (kao i3 split h/v)
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+
+accordion-padding = 30
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+[key-mapping]
+preset = 'qwerty'
+
+# i3: gaps inner 4, outer 0
+[gaps]
+inner.horizontal = 4
+inner.vertical = 4
+outer.left = 0
+outer.bottom = 0
+outer.top = 0
+outer.right = 0
+
+[mode.main.binding]
+# Terminal / browser
+alt-enter = 'exec-and-forget open -na Ghostty'
+alt-shift-enter = 'exec-and-forget open -na "Google Chrome" --args --new-window'
+
+alt-shift-q = 'close'
+
+# Focus (prelazi i na drugi monitor, kao u i3)
+alt-h = 'focus --boundaries all-monitors-outer-frame left'
+alt-j = 'focus --boundaries all-monitors-outer-frame down'
+alt-k = 'focus --boundaries all-monitors-outer-frame up'
+alt-l = 'focus --boundaries all-monitors-outer-frame right'
+alt-left = 'focus --boundaries all-monitors-outer-frame left'
+alt-down = 'focus --boundaries all-monitors-outer-frame down'
+alt-up = 'focus --boundaries all-monitors-outer-frame up'
+alt-right = 'focus --boundaries all-monitors-outer-frame right'
+
+# Move
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+alt-shift-left = 'move left'
+alt-shift-down = 'move down'
+alt-shift-up = 'move up'
+alt-shift-right = 'move right'
+
+# Layout
+alt-b = 'split horizontal'
+alt-v = 'split vertical'
+alt-f = 'fullscreen'
+alt-s = 'layout v_accordion'                # i3 stacking
+alt-w = 'layout h_accordion'                # i3 tabbed
+alt-e = 'layout tiles horizontal vertical'  # i3 layout toggle split
+alt-shift-space = 'layout floating tiling'
+
+# Workspaces (i3: 1:Terminal 2:Sublime 3:Browser 4:Chats 5:Meet)
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
+
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-0 = 'move-node-to-workspace 10'
+
+# Workspace na drugi monitor (AeroSpace zna samo next/prev, ne pravce)
+alt-ctrl-shift-left = 'move-workspace-to-monitor --wrap-around prev'
+alt-ctrl-shift-right = 'move-workspace-to-monitor --wrap-around next'
+alt-ctrl-shift-up = 'move-workspace-to-monitor --wrap-around prev'
+alt-ctrl-shift-down = 'move-workspace-to-monitor --wrap-around next'
+
+alt-shift-c = 'reload-config'
+alt-r = 'mode resize'
+
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+left = 'resize width -50'
+down = 'resize height +50'
+up = 'resize height -50'
+right = 'resize width +50'
+enter = 'mode main'
+esc = 'mode main'
+alt-r = 'mode main'
+
+# i3: gnome-calendar / gnome-calculator floating
+[[on-window-detected]]
+if.app-id = 'com.apple.calculator'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iCal'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = 'layout floating'

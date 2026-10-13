@@ -11,8 +11,8 @@
 #                             pre linkovanja instalira fish ako ga nema, a posle
 #                             ga postavi kao login shell (traži sudo/lozinku)
 #
-# Grupe: base tmux fish i3 zed claude claude-work
-# Podrazumevano se linkuju base (u njoj je i tmux), fish, zed i claude. Grupa
+# Grupe: base vim tmux fish i3 zed claude claude-work
+# Podrazumevano se linkuju base (u njoj su i vim i tmux), fish, zed i claude. Grupa
 # i3 se linkuje samo kad se izričito navede; ceo i3 desktop (paketi + linkovi
 # + GDM) podiže ./install-i3.sh, a Mac (brew + fish, tmux, zed) ./install-mac.sh.
 # claude-work linkuje isti Claude config u ~/.claude-work (poslovni nalog,
@@ -48,10 +48,14 @@ link() {
 }
 
 group_base() {
-    link .vimrc
     link .tmate.conf
     link .gitconfig
+    group_vim
     group_tmux
+}
+
+group_vim() {
+    link .vimrc
 }
 
 group_tmux() {
@@ -161,8 +165,8 @@ for arg in "$@"; do
         -n|--dry-run) DRY_RUN=1 ;;
         --install-fish) INSTALL_FISH=1 ;;
         -h|--help) sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
-        base|tmux|fish|i3|zed|claude|claude-work) groups+=("$arg") ;;
-        *) echo "Nepoznat argument: $arg (grupe: base tmux fish i3 zed claude claude-work)" >&2; exit 1 ;;
+        base|vim|tmux|fish|i3|zed|claude|claude-work) groups+=("$arg") ;;
+        *) echo "Nepoznat argument: $arg (grupe: base vim tmux fish i3 zed claude claude-work)" >&2; exit 1 ;;
     esac
 done
 

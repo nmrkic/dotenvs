@@ -39,8 +39,12 @@
         "mode": "acceptEdits"
       },
       "type": "custom",
-      "command": "npx",
-      "args": ["-y", "@agentclientprotocol/claude-agent-acp"]
+      // npx iz Zed-ovog ugrađenog Node-a ako sistemski nije instaliran
+      "command": "sh",
+      "args": [
+        "-c",
+        "for d in \"$HOME/Library/Application Support/Zed/node\"/node-*/bin; do PATH=\"$PATH:$d\"; done; export PATH; exec npx -y @agentclientprotocol/claude-agent-acp"
+      ]
     },
     "Claude Work": {
       "default_config_options": {
@@ -54,7 +58,7 @@
       "command": "sh",
       "args": [
         "-c",
-        "CLAUDE_CONFIG_DIR=\"$HOME/.claude-work\" exec npx -y @agentclientprotocol/claude-agent-acp"
+        "for d in \"$HOME/Library/Application Support/Zed/node\"/node-*/bin; do PATH=\"$PATH:$d\"; done; export PATH; CLAUDE_CONFIG_DIR=\"$HOME/.claude-work\" exec npx -y @agentclientprotocol/claude-agent-acp"
       ]
     }
   },
@@ -75,6 +79,10 @@
     "trust_all_worktrees": true,
   },
   "vim_mode": true,
+  "vim": {
+    // y/d/c i p idu preko sistemskog clipboard-a, kao vim i tmux
+    "use_system_clipboard": "always",
+  },
   "base_keymap": "SublimeText",
   "ui_font_size": 16,
   "buffer_font_size": 15,

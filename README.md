@@ -57,7 +57,7 @@ cd ~/tools/dotenvs
 ./install.sh --install-fish   # isto + instalira fish i postavi ga kao login shell
 ```
 
-Grupe su `base` (vim, tmux, tmate, git), `tmux` (samo `.tmux.conf`), `fish`,
+Grupe su `base` (vim, tmux, tmate, git), `vim` (samo `.vimrc`), `tmux` (samo `.tmux.conf`), `fish`,
 `i3` (i3, rofi, picom, polybar, dunst, conky, `.screenlayout`, i3-x11 wrapper),
 `zed`, `claude` i `claude-work` (isti Claude config, ali u `~/.claude-work`).
 Podrazumevano se linkuju `base`, `fish`, `zed` i `claude`.
@@ -76,7 +76,7 @@ Sa Homebrew-om instalira sve preko brew-a. Bez njega, i bez admin prava, tmux
 source-a u `~/.local/bin`, a izvorni kod ostaje u `~/.local/src`. Za to treba
 samo Xcode Command Line Tools (`xcode-select --install`). Zed se tada preskače.
 Ako korisnik nije u `admin` grupi, nema `chsh`, pa skripta na kraj `~/.zshrc`
-dodaje blok koji pokreće fish. Linkuje `fish`, `tmux`, `zed` i
+dodaje blok koji pokreće fish. Linkuje `fish`, `vim`, `tmux`, `zed` i
 `claude-work`; ostalo se dodaje po želji (`./install.sh base`). Razlike u odnosu
 na Linux:
 
@@ -88,6 +88,8 @@ na Linux:
   `conf.d/` i `fish_variables`, koji su vezani za Linux računar.
 - `config.fish` i `.tmux.conf` su pisani da rade na oba sistema (`$HOME` umesto
   `/home/nebojsa`, `pbcopy` umesto `xclip`, pyenv/tmux/Homebrew samo ako postoje).
+- Vim, Zed (vim mode) i tmux koriste sistemski clipboard, pa copy/paste radi
+  između njih i ostalih aplikacija; u tmux-u `prefix + ]` lepi sistemski clipboard.
 - `.gitconfig` (grupa `base`) traži `git-delta` i GPG ključ za potpisivanje
   commit-ova, pa ga na Mac-u linkuj tek kad to dvoje postoji.
 - `mac/.yabairc`, `mac/.skhdrc` i `mac/sublime/` se ne linkuju automatski.

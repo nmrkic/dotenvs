@@ -6,4 +6,5 @@ filetype indent plugin on
 :  autocmd BufEnter,FocusGained,InsertLeave * set nu relativenumber
 :  autocmd BufLeave,FocusLost,InsertEnter   * set nonu norelativenumber
 :augroup END
-set clipboard+=unnamed
+" sistemski clipboard: unnamed = macOS / Linux PRIMARY, unnamedplus = Linux Ctrl+V
+set clipboard=unnamed,unnamedplus

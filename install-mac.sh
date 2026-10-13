@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Podiže Mac: instalira fish, tmux i Zed, linkuje njihove config-e iz ovog
+# Podiže Mac: instalira fish, tmux i Zed, linkuje njihove config-e (i .vimrc) iz ovog
 # repoa i postavlja fish kao login shell. Claude Code se podešava samo za
 # poslovni nalog (~/.claude-work), lični ~/.claude se ne dira.
 #
@@ -166,9 +166,9 @@ else
     flags=(fish)
 fi
 if [ "$DRY_RUN" -eq 1 ]; then
-    "$REPO/install.sh" -n "${flags[@]}" tmux zed claude-work | sed -e '1d' -e '/^$/,$d'
+    "$REPO/install.sh" -n "${flags[@]}" vim tmux zed claude-work | sed -e '1d' -e '/^$/,$d'
 else
-    "$REPO/install.sh" "${flags[@]}" tmux zed claude-work | sed '/^$/,$d'
+    "$REPO/install.sh" "${flags[@]}" vim tmux zed claude-work | sed '/^$/,$d'
 fi
 if [ "${flags[0]}" = fish ]; then zshrc_fish; fi
 
