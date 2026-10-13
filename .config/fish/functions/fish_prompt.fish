@@ -39,7 +39,7 @@ function fish_prompt --description 'Write out the prompt'
         set -g __fish_prompt_hostname (hostname|cut -d . -f 1)
     end
 
-    # kubectl context samo ako je kubectl instaliran i context je postavljen
+    # kubectl context only if kubectl is installed and a context is set
     if type -q kubectl
         set -l kubenv (kubectl config current-context 2>/dev/null)
         if test -n "$kubenv"

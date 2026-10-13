@@ -1,5 +1,5 @@
-# Iste boje kao GNOME Terminal profil na Linux-u:
-# Solarized Dark pozadina/tekst + podrazumevana GNOME paleta.
+# Same colors as the GNOME Terminal profile on Linux:
+# Solarized Dark background/text + the default GNOME palette.
 
 background = #002b36
 foreground = #839496

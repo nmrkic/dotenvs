@@ -1,13 +1,13 @@
-# AeroSpace config, prečice prepisane iz .config/i3/config.
-# Linux $mod (Super) je ovde alt (⌥). U Keyboard → Modifier Keys su za
-# eksternu tastaturu zamenjeni ⌘ i ⌥, pa je ⌥ na start dugmetu kao na Linuxu,
-# a ⌘V/⌘S/⌘W... ostaju na fizičkom alt dugmetu.
-# Spotlight prebaciti na ⌥Space (Keyboard Shortcuts → Spotlight).
+# AeroSpace config, shortcuts ported from .config/i3/config.
+# The Linux $mod (Super) is alt (⌥) here. Keyboard → Modifier Keys swaps ⌘ and ⌥
+# for the external keyboard, so ⌥ sits on the Start key like on Linux,
+# and ⌘V/⌘S/⌘W... stay on the physical alt key.
+# Move Spotlight to ⌥Space (Keyboard Shortcuts → Spotlight).
 # Link: ln -s ~/tools/dotenvs/mac/.aerospace.toml ~/.aerospace.toml
 
 start-at-login = true
 
-# bez ovoga 'split' ne radi (kao i3 split h/v)
+# without this 'split' doesn't work (like i3 split h/v)
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
 
@@ -34,7 +34,7 @@ alt-shift-enter = 'exec-and-forget open -na "Google Chrome" --args --new-window'
 
 alt-shift-q = 'close'
 
-# Focus (prelazi i na drugi monitor, kao u i3)
+# Focus (also crosses to the other monitor, like in i3)
 alt-h = 'focus --boundaries all-monitors-outer-frame left'
 alt-j = 'focus --boundaries all-monitors-outer-frame down'
 alt-k = 'focus --boundaries all-monitors-outer-frame up'
@@ -86,7 +86,7 @@ alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-0 = 'move-node-to-workspace 10'
 
-# Workspace na drugi monitor (AeroSpace zna samo next/prev, ne pravce)
+# Workspace to the other monitor (AeroSpace only knows next/prev, not directions)
 alt-ctrl-shift-left = 'move-workspace-to-monitor --wrap-around prev'
 alt-ctrl-shift-right = 'move-workspace-to-monitor --wrap-around next'
 alt-ctrl-shift-up = 'move-workspace-to-monitor --wrap-around prev'

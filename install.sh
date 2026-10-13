@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
-# Linkuje dotfiles iz ovog repoa u $HOME.
+# Links the dotfiles from this repo into $HOME.
 #
-# Bezbedno za ponovno pokretanje: ispravni linkovi se preskaču, a ono što već
-# postoji na ciljnoj lokaciji se sklanja u <ime>.bak-<datum> pre linkovanja.
+# Safe to re-run: correct links are skipped, and anything else already at the
+# target is moved to <name>.bak-<date> before linking.
 #
-#   ./install.sh              sve grupe za ovaj OS
-#   ./install.sh zed claude   samo navedene grupe
-#   ./install.sh -n [grupe]   samo ispiši šta bi uradio
-#   ./install.sh --install-fish [grupe]
-#                             pre linkovanja instalira fish ako ga nema, a posle
-#                             ga postavi kao login shell (traži sudo/lozinku)
+#   ./install.sh              all groups for this OS
+#   ./install.sh zed claude   only the listed groups
+#   ./install.sh -n [groups]  only print what it would do
+#   ./install.sh --install-fish [groups]
+#                             install fish before linking if it is missing, and
+#                             make it the login shell afterwards (asks for sudo)
 #
-# Grupe: base vim tmux fish i3 zed claude claude-work
-# Podrazumevano se linkuju base (u njoj su i vim i tmux), fish, zed i claude. Grupa
-# i3 se linkuje samo kad se izričito navede; ceo i3 desktop (paketi + linkovi
-# + GDM) podiže ./install-i3.sh, a Mac (brew + fish, tmux, zed) ./install-mac.sh.
-# claude-work linkuje isti Claude config u ~/.claude-work (poslovni nalog,
-# CLAUDE_CONFIG_DIR) i takođe ide samo kad se navede.
+# Groups: base vim tmux fish i3 zed mac claude claude-work
+# By default base (which includes vim and tmux), fish, zed and claude are linked.
+# The i3 group is linked only when named explicitly; the whole i3 desktop
+# (packages + links + GDM) is set up by ./install-i3.sh, and the Mac (brew +
+# fish, tmux, zed) by ./install-mac.sh. claude-work links the same Claude config
+# into ~/.claude-work (work account, CLAUDE_CONFIG_DIR) and is also only linked
+# when named. Same for mac (AeroSpace, Ghostty), which install-mac.sh includes.
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -27,11 +28,11 @@ run() {
     if [ "$DRY_RUN" -eq 0 ]; then "$@"; fi
 }
 
-# link <putanja u repou> [putanja u $HOME, ako se razlikuje]
+# link <path in the repo> [path in $HOME, if different]
 link() {
     local src="$REPO/$1" dst="$HOME/${2:-$1}"
     if [ ! -e "$src" ]; then
-        echo "FALI    $src"
+        echo "MISSING $src"
         return
     fi
     if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
@@ -64,13 +65,13 @@ group_tmux() {
 
 group_fish() {
     if [ "$(uname -s)" = "Darwin" ]; then
-        # conf.d i fish_variables su vezani za Linux računar (virtualfish,
-        # rustup, univerzalne promenljive), pa se na Mac-u linkuje fajl po fajl
+        # conf.d and fish_variables are tied to the Linux machine (virtualfish,
+        # rustup, universal variables), so on Mac files are linked one by one
         link .config/fish/config.fish
         link .config/fish/functions
         link .config/fish/fish_plugins
     else
-        # ceo direktorijum, fish sam piše fish_variables/completions unutra
+        # the whole directory, fish writes fish_variables/completions into it itself
         link .config/fish
     fi
 }
@@ -97,6 +98,11 @@ group_zed() {
     link .config/zed/keymap.json
 }
 
+group_mac() {
+    link mac/.aerospace.toml .aerospace.toml
+    link mac/ghostty/config  .config/ghostty/config
+}
+
 group_claude() {
     link .claude/settings.json
     link .claude/commands
@@ -110,9 +116,9 @@ group_claude_work() {
 }
 
 install_fish() {
-    echo "== instalacija fish-a"
+    echo "== installing fish"
     if command -v fish >/dev/null 2>&1; then
-        echo "ok      fish je već instaliran ($(command -v fish))"
+        echo "ok      fish is already installed ($(command -v fish))"
     elif command -v apt-get >/dev/null 2>&1; then
         echo "install fish (apt)"
         run sudo apt-get install -y fish
@@ -126,18 +132,18 @@ install_fish() {
         echo "install fish (brew)"
         run brew install fish
     else
-        echo "Nema apt/dnf/pacman/brew, instaliraj fish ručno pa pokreni ponovo." >&2
+        echo "No apt/dnf/pacman/brew, install fish by hand and run again." >&2
         exit 1
     fi
 }
 
 default_shell_fish() {
-    echo "== fish kao login shell"
+    echo "== fish as the login shell"
     local fish_bin login_shell
     fish_bin="$(command -v fish || true)"
     if [ -z "$fish_bin" ]; then
-        # samo u dry run-u, inače bi install_fish već prekinuo skriptu
-        echo "chsh    (fish još nije instaliran)"
+        # only in a dry run, otherwise install_fish would already have stopped the script
+        echo "chsh    (fish is not installed yet)"
         return
     fi
     if [ "$(uname -s)" = "Darwin" ]; then
@@ -146,15 +152,15 @@ default_shell_fish() {
         login_shell="$(getent passwd "$(id -un)" | cut -d: -f7)"
     fi
     if [ "$(basename "$login_shell")" = "fish" ]; then
-        echo "ok      login shell je već $login_shell"
+        echo "ok      login shell is already $login_shell"
         return
     fi
-    # chsh odbija shell koji nije u /etc/shells (brew ga ne upisuje sam)
+    # chsh refuses a shell that isn't in /etc/shells (brew doesn't add it itself)
     if ! grep -qx "$fish_bin" /etc/shells; then
-        echo "dodajem $fish_bin u /etc/shells"
+        echo "adding  $fish_bin to /etc/shells"
         run sudo sh -c "echo '$fish_bin' >> /etc/shells"
     fi
-    echo "chsh    $login_shell -> $fish_bin (važi od sledećeg logina)"
+    echo "chsh    $login_shell -> $fish_bin (takes effect at the next login)"
     run chsh -s "$fish_bin"
 }
 
@@ -164,9 +170,9 @@ for arg in "$@"; do
     case "$arg" in
         -n|--dry-run) DRY_RUN=1 ;;
         --install-fish) INSTALL_FISH=1 ;;
-        -h|--help) sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
-        base|vim|tmux|fish|i3|zed|claude|claude-work) groups+=("$arg") ;;
-        *) echo "Nepoznat argument: $arg (grupe: base vim tmux fish i3 zed claude claude-work)" >&2; exit 1 ;;
+        -h|--help) sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        base|vim|tmux|fish|i3|zed|mac|claude|claude-work) groups+=("$arg") ;;
+        *) echo "Unknown argument: $arg (groups: base vim tmux fish i3 zed mac claude claude-work)" >&2; exit 1 ;;
     esac
 done
 
@@ -174,7 +180,7 @@ if [ "${#groups[@]}" -eq 0 ]; then
     groups=(base fish zed claude)
 fi
 
-# --install-fish podrazumeva i linkovanje fish config-a
+# --install-fish implies linking the fish config too
 if [ "$INSTALL_FISH" -eq 1 ]; then
     case " ${groups[*]} " in
         *" fish "*) ;;
@@ -182,7 +188,7 @@ if [ "$INSTALL_FISH" -eq 1 ]; then
     esac
 fi
 
-if [ "$DRY_RUN" -eq 1 ]; then echo "(dry run, ništa se ne menja)"; fi
+if [ "$DRY_RUN" -eq 1 ]; then echo "(dry run, nothing is changed)"; fi
 if [ "$INSTALL_FISH" -eq 1 ]; then install_fish; fi
 for g in "${groups[@]}"; do
     echo "== $g"
@@ -192,9 +198,9 @@ if [ "$INSTALL_FISH" -eq 1 ]; then default_shell_fish; fi
 
 cat <<EOF
 
-Gotovo. Šta ova skripta ne radi:
-  - fish instalacija i login shell: ./install.sh --install-fish
-  - i3 desktop (paketi, linkovi, GDM sesija): ./install-i3.sh
-  - Mac (brew paketi + fish, tmux, zed): ./install-mac.sh
-  - 'claude' login pre korišćenja Claude Code-a (sekcija 7)
+Done. What this script doesn't do:
+  - fish install and login shell: ./install.sh --install-fish
+  - i3 desktop (packages, links, GDM session): ./install-i3.sh
+  - Mac (brew packages + fish, tmux, zed): ./install-mac.sh
+  - 'claude' login before using Claude Code (section 7)
 EOF

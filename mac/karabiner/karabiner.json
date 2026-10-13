@@ -9,7 +9,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Eksterna tastatura: start <-> alt (start je ⌥ za AeroSpace)",
+                        "description": "External keyboard: Start <-> alt (Start is ⌥ for AeroSpace)",
                         "manipulators": [
                             {
                                 "type": "basic",
@@ -222,7 +222,7 @@
                         ]
                     },
                     {
-                        "description": "Linux prečice van terminala: Ctrl+slovo -> ⌘, Ctrl+strelice, Home/End",
+                        "description": "Linux shortcuts outside the terminal: Ctrl+letter -> ⌘, Ctrl+arrows, Home/End",
                         "manipulators": [
                             {
                                 "type": "basic",

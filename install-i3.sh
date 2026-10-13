@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Podiže i3 desktop na Ubuntu/Debian računaru: instalira pakete, linkuje i3
-# grupu dotfiles-a i podešava GDM sesiju. Odvojeno od install.sh jer i3 ne ide
-# na svaki računar.
+# Sets up the i3 desktop on an Ubuntu/Debian machine: installs packages, links
+# the i3 group of dotfiles and configures the GDM session. Kept separate from
+# install.sh because i3 doesn't go on every machine.
 #
-# Bezbedno za ponovno pokretanje: već instalirani paketi i ispravni fajlovi se
-# preskaču, pa sudo traži samo kad stvarno ima šta da uradi.
+# Safe to re-run: packages that are already installed and files that are
+# already correct are skipped, so sudo is only asked for when there is work.
 #
-#   ./install-i3.sh       instaliraj i podesi
-#   ./install-i3.sh -n    samo ispiši šta bi uradio
+#   ./install-i3.sh       install and configure
+#   ./install-i3.sh -n    only print what it would do
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -33,7 +33,7 @@ apt_install() {
         if ! installed "$pkg"; then missing+=("$pkg"); fi
     done
     if [ "${#missing[@]}" -eq 0 ]; then
-        echo "ok      svi paketi su već instalirani"
+        echo "ok      all packages are already installed"
         return
     fi
     echo "install ${missing[*]}"
@@ -44,18 +44,18 @@ for arg in "$@"; do
     case "$arg" in
         -n|--dry-run) DRY_RUN=1 ;;
         -h|--help) sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
-        *) echo "Nepoznat argument: $arg" >&2; exit 1 ;;
+        *) echo "Unknown argument: $arg" >&2; exit 1 ;;
     esac
 done
 
 if ! command -v apt-get >/dev/null 2>&1; then
-    echo "Ova skripta radi samo na sistemima sa apt-om (Ubuntu/Debian)." >&2
+    echo "This script only works on systems with apt (Ubuntu/Debian)." >&2
     exit 1
 fi
 
-if [ "$DRY_RUN" -eq 1 ]; then echo "(dry run, ništa se ne menja)"; fi
+if [ "$DRY_RUN" -eq 1 ]; then echo "(dry run, nothing is changed)"; fi
 
-echo "== paketi"
+echo "== packages"
 apt_install "${PACKAGES[@]}"
 
 if [ "$DRY_RUN" -eq 1 ]; then
@@ -64,8 +64,8 @@ else
     "$REPO/install.sh" i3 | sed '/^$/,$d'
 fi
 
-# Binarni fajl je u repou, ali je kompajliran za x86-64; na drugoj arhitekturi
-# ili bez libX11 ne može da se pokrene, pa ga tada kompajliramo iz izvora.
+# The binary is in the repo, but it is built for x86-64; on another architecture
+# or without libX11 it can't run, so then we build it from source.
 echo "== layout-notify"
 SCRIPTS="$REPO/.config/i3/scripts"
 if ldd "$SCRIPTS/layout-notify" >/dev/null 2>&1 \
@@ -77,9 +77,9 @@ else
     run gcc -o "$SCRIPTS/layout-notify" "$SCRIPTS/layout-notify.c" -lX11
 fi
 
-# GDM čita samo /usr/share/xsessions, a i3 paket pri update-u vraća original,
-# pa se Exec ovde upućuje na i3-x11 wrapper ovog korisnika.
-echo "== GDM sesija"
+# GDM only reads /usr/share/xsessions, and the i3 package restores the original
+# on update, so Exec here points to this user's i3-x11 wrapper.
+echo "== GDM session"
 XSESSION=/usr/share/xsessions/i3.desktop
 WANTED="$(sed "s|^Exec=.*|Exec=$HOME/.local/bin/i3-x11|" "$REPO/system$XSESSION")"
 if [ -f "$XSESSION" ] && [ "$(cat "$XSESSION")" = "$WANTED" ]; then
@@ -94,10 +94,10 @@ fi
 
 cat <<EOF
 
-Gotovo. Odjavi se i na GDM ekranu izaberi sesiju "i3".
-Ručno ostaje (vidi README.md):
-  - snixembed (tray za polybar) se ne instalira preko apt-a
-  - pozadina: i3 config očekuje ~/Pictures/dark-blue.jpg
-  - Chrome wrapper sa GPU flagovima, samo ako Chrome pravi probleme (sekcija 4)
-  - monitor layout za ovaj računar preko arandr-a (sekcija 5)
+Done. Log out and pick the "i3" session on the GDM screen.
+Left to do by hand (see README.md):
+  - snixembed (tray for polybar) is not installed via apt
+  - wallpaper: the i3 config expects ~/Pictures/dark-blue.jpg
+  - Chrome wrapper with GPU flags, only if Chrome misbehaves (section 4)
+  - monitor layout for this machine via arandr (section 5)
 EOF

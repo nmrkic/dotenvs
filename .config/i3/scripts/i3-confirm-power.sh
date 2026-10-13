@@ -5,19 +5,19 @@ action="$1"
 
 case "$action" in
     poweroff)
-        prompt="Ugasi sistem?"
+        prompt="Shut down?"
         key="P"
         kbkey="P"
         cmd="systemctl poweroff"
         ;;
     reboot)
-        prompt="Restartuj sistem?"
+        prompt="Reboot?"
         key="B"
         kbkey="B"
         cmd="systemctl reboot"
         ;;
     exit)
-        prompt="Izlaz iz i3?"
+        prompt="Exit i3?"
         key="E"
         kbkey="E"
         cmd="i3-msg exit"
@@ -27,9 +27,9 @@ case "$action" in
         ;;
 esac
 
-out=$(printf 'Da\nNe\n' | rofi -dmenu -p "$prompt" -mesg "Pritisni <b>$key</b> za brzu potvrdu" -markup-rows -kb-custom-1 "$kbkey" -kb-custom-2 "Super+$kbkey")
+out=$(printf 'Yes\nNo\n' | rofi -dmenu -p "$prompt" -mesg "Press <b>$key</b> to confirm" -markup-rows -kb-custom-1 "$kbkey" -kb-custom-2 "Super+$kbkey")
 code=$?
 
-if [ "$code" = 10 ] || [ "$code" = 11 ] || [ "$out" = "Da" ]; then
+if [ "$code" = 10 ] || [ "$code" = 11 ] || [ "$out" = "Yes" ]; then
     $cmd
 fi

@@ -1,6 +1,6 @@
-# macOS (Apple Silicon): Homebrew mora u PATH pre nego što se traži tmux
+# macOS (Apple Silicon): Homebrew has to be on PATH before tmux is looked up
 test -x /opt/homebrew/bin/brew; and eval (/opt/homebrew/bin/brew shellenv)
-# isto za tmux kompajliran u ~/.local (Mac bez brew-a, install-mac.sh)
+# same for tmux built into ~/.local (Mac without brew, install-mac.sh)
 set PATH $PATH ~/.local/bin
 
 if status is-interactive
@@ -82,7 +82,7 @@ alias d-u 'docker compose up -d'
 alias kc 'kubectl'
 alias kx 'kubectx'
 # -------------------------------------------------------------------
-# Linux desktop (bluetoothctl, xinput, i3), na Mac-u se preskače
+# Linux desktop (bluetoothctl, xinput, i3), skipped on Mac
 # -------------------------------------------------------------------
 if test (uname -s) = Linux
     # Headphone aliases

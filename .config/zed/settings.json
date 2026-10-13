@@ -39,7 +39,7 @@
         "mode": "acceptEdits"
       },
       "type": "custom",
-      // npx iz Zed-ovog ugrađenog Node-a ako sistemski nije instaliran
+      // npx from Zed's bundled Node if there is no system one
       "command": "sh",
       "args": [
         "-c",
@@ -54,7 +54,7 @@
         "mode": "acceptEdits"
       },
       "type": "custom",
-      // sh -c da bi $HOME važio i na Linuxu i na Mac-u
+      // sh -c so that $HOME works on both Linux and Mac
       "command": "sh",
       "args": [
         "-c",
@@ -80,7 +80,7 @@
   },
   "vim_mode": true,
   "vim": {
-    // y/d/c i p idu preko sistemskog clipboard-a, kao vim i tmux
+    // y/d/c and p use the system clipboard, like vim and tmux
     "use_system_clipboard": "always",
   },
   "base_keymap": "SublimeText",
